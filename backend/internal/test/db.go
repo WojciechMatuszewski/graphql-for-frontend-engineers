@@ -2,16 +2,20 @@ package test
 
 import (
 	"context"
+	"fmt"
 	"testing"
 
 	"backend/pkg/db"
 
+	"github.com/docker/go-connections/nat"
+	"github.com/testcontainers/testcontainers-go/wait"
+
+	"github.com/google/uuid"
+
 	"github.com/aws/aws-sdk-go-v2/aws"
 
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
-	"github.com/docker/go-connections/nat"
 	"github.com/testcontainers/testcontainers-go"
-	"github.com/testcontainers/testcontainers-go/wait"
 )
 
 var container testcontainers.Container
@@ -31,33 +35,35 @@ func init() {
 
 type DB struct {
 	Client *dynamodb.Client
-	table  string
+	Table  string
 }
 
-func NewDB(t *testing.T) (DB, error) {
+func NewDB(t *testing.T) DB {
 	t.Helper()
 
 	endpoint, err := container.Endpoint(context.Background(), "http")
 	if err != nil {
 		t.Fatal(err)
 	}
+	fmt.Println(endpoint)
+	tableName := uuid.Must(uuid.NewRandom()).String()
 
-	d, err := db.New(endpoint, "")
+	d, err := db.New(endpoint, tableName)
 	if err != nil {
 		t.Fatal(err)
 	}
 
 	return DB{
 		Client: d,
-		table:  "",
-	}, nil
+		Table:  tableName,
+	}
 
 }
 
 func (d DB) Cleanup(t *testing.T) {
 	t.Helper()
 	req := d.Client.DeleteTableRequest(&dynamodb.DeleteTableInput{
-		TableName: aws.String(d.table),
+		TableName: aws.String(d.Table),
 	})
 
 	_, err := req.Send(context.Background())
@@ -75,7 +81,7 @@ func getTestContainer() (testcontainers.Container, error) {
 	}
 
 	req := testcontainers.ContainerRequest{
-		Image:        "amazon/dynamodb-local",
+		Image:        "amazon/dynamodb-local:1.13.1",
 		ExposedPorts: []string{"8000/tcp"},
 		WaitingFor:   wait.ForListeningPort(port),
 	}

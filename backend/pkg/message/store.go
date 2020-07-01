@@ -28,7 +28,8 @@ func (s Store) GetMessages(ctx context.Context) ([]Message, error) {
 	}
 
 	req := s.db.QueryRequest(&dynamodb.QueryInput{
-		ExpressionAttributeNames:  expr.Names(),
+		ExpressionAttributeNames: expr.Names(),
+
 		ExpressionAttributeValues: expr.Values(),
 		KeyConditionExpression:    expr.KeyCondition(),
 		TableName:                 aws.String(s.table),

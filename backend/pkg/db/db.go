@@ -28,18 +28,17 @@ func New(endpoint string, tableName string) (*dynamodb.Client, error) {
 }
 
 func NewConfig(endpoint string) aws.Config {
-	cfg, err := external.LoadDefaultAWSConfig()
+	cfg, err := external.LoadDefaultAWSConfig(aws.StaticCredentialsProvider{Value: aws.Credentials{
+		SecretAccessKey: "local",
+		SessionToken:    "local",
+		Source:          "local",
+		CanExpire:       false,
+	}})
 	if err != nil {
 		panic(err.Error())
 	}
 
 	cfg.Region = "local"
-	cfg.Credentials = aws.StaticCredentialsProvider{Value: aws.Credentials{
-		SecretAccessKey: "local",
-		SessionToken:    "local",
-		Source:          "local",
-		CanExpire:       false,
-	}}
 	cfg.EndpointResolver = aws.ResolveWithEndpointURL(endpoint)
 
 	return cfg
@@ -48,20 +47,21 @@ func NewConfig(endpoint string) aws.Config {
 func getTableInput(tableName string) *dynamodb.CreateTableInput {
 	return &dynamodb.CreateTableInput{
 		AttributeDefinitions: []dynamodb.AttributeDefinition{
-			{AttributeType: dynamodb.ScalarAttributeTypeS, AttributeName: aws.String("PK")},
-			{AttributeType: dynamodb.ScalarAttributeTypeS, AttributeName: aws.String("SK")},
+			{AttributeType: dynamodb.ScalarAttributeTypeS, AttributeName: aws.String("pk")},
+			{AttributeType: dynamodb.ScalarAttributeTypeS, AttributeName: aws.String("sk")},
+			{AttributeType: dynamodb.ScalarAttributeTypeS, AttributeName: aws.String("lssk")},
 		},
 		BillingMode: dynamodb.BillingModePayPerRequest,
 		KeySchema: []dynamodb.KeySchemaElement{
-			{KeyType: "HASH", AttributeName: aws.String("PK")},
-			{KeyType: "RANGE", AttributeName: aws.String("SK")},
+			{KeyType: "HASH", AttributeName: aws.String("pk")},
+			{KeyType: "RANGE", AttributeName: aws.String("sk")},
 		},
 		LocalSecondaryIndexes: []dynamodb.LocalSecondaryIndex{
 			{
 				IndexName: aws.String("ByCreatedAt"),
 				KeySchema: []dynamodb.KeySchemaElement{
-					{KeyType: "HASH", AttributeName: aws.String("PK")},
-					{KeyType: "RANGE", AttributeName: aws.String("LSSK")},
+					{KeyType: "HASH", AttributeName: aws.String("pk")},
+					{KeyType: "RANGE", AttributeName: aws.String("lssk")},
 				},
 				Projection: &dynamodb.Projection{
 					ProjectionType: dynamodb.ProjectionTypeAll,
