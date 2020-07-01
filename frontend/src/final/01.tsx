@@ -7,9 +7,10 @@ import {
   HttpLink,
   InMemoryCache
 } from "@apollo/client";
+import { getBackendURI } from "../utils/backend";
 
 // create necessary constructs
-const httpLink = new HttpLink({ uri: "http://localhost:4000/graphql" });
+const httpLink = new HttpLink({ uri: getBackendURI() });
 const cache = new InMemoryCache();
 
 const client = new ApolloClient({ link: httpLink, cache });

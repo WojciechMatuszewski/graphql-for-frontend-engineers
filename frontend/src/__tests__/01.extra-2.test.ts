@@ -1,8 +1,8 @@
 import { httpLink } from "../final/01.extra-2";
+import { getBackendURI } from "../utils/backend";
 
 describe("01.extra-2 httpLink test", () => {
   it("refers to the correct URI", () => {
-    console.log(httpLink);
-    expect(httpLink.options.uri).toBe("http://localhost:4000/graphql");
+    expect(httpLink.options.uri).toBe(getBackendURI());
   });
 });

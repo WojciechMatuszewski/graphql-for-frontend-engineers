@@ -1,4 +1,5 @@
 import React from "react";
+// 💯 Tests for the httpLink URI
 
 // usually everything that has to do with setting up Apollo would go to a separate file.
 import {
@@ -7,8 +8,9 @@ import {
   HttpLink,
   InMemoryCache
 } from "@apollo/client";
+import { getBackendURI } from "../utils/backend";
 
-const httpLink = new HttpLink({ uri: "http://localhost:4000/graphql" });
+const httpLink = new HttpLink({ uri: getBackendURI() });
 const cache = new InMemoryCache();
 
 const client = new ApolloClient({ link: httpLink, cache });
