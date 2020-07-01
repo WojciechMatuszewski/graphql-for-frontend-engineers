@@ -1,0 +1,14 @@
+type Query {
+    messages: [Message]!
+    foo: String!
+}
+
+type Message {
+    id: ID!
+    content: String!
+    createdAt: String!
+}
+
+input MessageInput {
+    content: String!
+}

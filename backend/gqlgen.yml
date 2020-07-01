@@ -1,0 +1,36 @@
+schema:
+  - ./pkg/gql/schema.graphql
+
+# Where should the generated server code go?
+exec:
+  filename: ./pkg/gql/generated.go
+  package: gql
+
+
+# Where should any generated models go?
+model:
+  filename: ./pkg/gql/model.go
+  package: gql
+
+# Where should the resolver implementations go?
+resolver:
+  layout: follow-schema
+  dir: ./pkg/gql
+  package: gql
+
+
+autobind:
+  - "backend/pkg/message"
+
+models:
+  ID:
+    model:
+      - github.com/99designs/gqlgen/graphql.ID
+      - github.com/99designs/gqlgen/graphql.Int
+      - github.com/99designs/gqlgen/graphql.Int64
+      - github.com/99designs/gqlgen/graphql.Int32
+  Int:
+    model:
+      - github.com/99designs/gqlgen/graphql.Int
+      - github.com/99designs/gqlgen/graphql.Int64
+      - github.com/99designs/gqlgen/graphql.Int32

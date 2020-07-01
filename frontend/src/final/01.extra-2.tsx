@@ -1,6 +1,6 @@
 import React from "react";
 
-// import all the dependencies here
+// usually everything that has to do with setting up Apollo would go to a separate file.
 import {
   ApolloClient,
   ApolloProvider,
@@ -8,17 +8,24 @@ import {
   InMemoryCache
 } from "@apollo/client";
 
-// create necessary constructs
 const httpLink = new HttpLink({ uri: "http://localhost:4000/graphql" });
 const cache = new InMemoryCache();
 
 const client = new ApolloClient({ link: httpLink, cache });
 
+type Props = {
+  children: React.ReactNode;
+};
+
+function ApolloClientProvider({ children }: Props) {
+  return <ApolloProvider client={client}>{children}</ApolloProvider>;
+}
+
 function App() {
   return (
-    <ApolloProvider client={client}>
+    <ApolloClientProvider>
       <div>Application</div>
-    </ApolloProvider>
+    </ApolloClientProvider>
   );
 }
 
@@ -27,4 +34,5 @@ function Usage() {
   return <App />;
 }
 
+export { httpLink };
 export default Usage;
