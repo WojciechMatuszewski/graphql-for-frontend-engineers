@@ -1,6 +1,9 @@
 type Query {
-    messages: [Message]!
-    foo: String!
+    messages(limit: Int = 25): [Message!]!
+}
+
+type Mutation {
+    message(input: MessageInput!): Message!
 }
 
 type Message {

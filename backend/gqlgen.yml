@@ -9,8 +9,8 @@ exec:
 
 # Where should any generated models go?
 model:
-  filename: ./pkg/gql/model.go
-  package: gql
+  filename: ./pkg/gql/model/model.go
+  package: model
 
 # Where should the resolver implementations go?
 resolver:
@@ -18,6 +18,7 @@ resolver:
   dir: ./pkg/gql
   package: gql
 
+omit_slice_element_pointers: true
 
 autobind:
   - "backend/pkg/message"

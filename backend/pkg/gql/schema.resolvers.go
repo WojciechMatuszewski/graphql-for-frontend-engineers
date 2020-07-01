@@ -4,20 +4,26 @@ package gql
 // will be copied through when generating and any unknown code will be moved to the end.
 
 import (
-	"backend/pkg/message"
 	"context"
-	"fmt"
+
+	"backend/pkg/gql/model"
+	"backend/pkg/message"
 )
 
-func (r *queryResolver) Messages(ctx context.Context) ([]*message.Message, error) {
-	panic(fmt.Errorf("not implemented"))
+func (r *mutationResolver) Message(ctx context.Context, input model.MessageInput) (*message.Message, error) {
+	out, err := r.MessageStore.CreateMessage(ctx, input)
+	return &out, err
 }
 
-func (r *queryResolver) Foo(ctx context.Context) (string, error) {
-	return "bar", nil
+func (r *queryResolver) Messages(ctx context.Context, limit *int) ([]message.Message, error) {
+	return r.MessageStore.GetMessages(ctx, int64(*limit))
 }
+
+// Mutation returns MutationResolver implementation.
+func (r *Resolver) Mutation() MutationResolver { return &mutationResolver{r} }
 
 // Query returns QueryResolver implementation.
 func (r *Resolver) Query() QueryResolver { return &queryResolver{r} }
 
+type mutationResolver struct{ *Resolver }
 type queryResolver struct{ *Resolver }

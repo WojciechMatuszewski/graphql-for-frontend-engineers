@@ -2,24 +2,32 @@ package db
 
 import (
 	"context"
-	"time"
+	"strings"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/aws/external"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
 )
 
-const DBDefaultTableName = "workshop-table"
+const (
+	DBDefaultTableName = "workshop-table"
+	DBDefaultEndpoint  = "http://localhost:8000"
+)
 
 func New(endpoint string, tableName string) (*dynamodb.Client, error) {
 	cfg := NewConfig(endpoint)
 	db := dynamodb.New(cfg)
 
-	ctx, cancel := context.WithDeadline(context.Background(), time.Now().Add(5*time.Second))
-	defer cancel()
+	err := createTable(db, tableName)
+	if err == nil {
+		return db, nil
+	}
 
-	req := db.CreateTableRequest(getTableInput(tableName))
-	_, err := req.Send(ctx)
+	if !strings.Contains(err.Error(), dynamodb.ErrCodeResourceInUseException) {
+		return nil, err
+	}
+
+	err = reinitializeTable(db, tableName)
 	if err != nil {
 		return nil, err
 	}
@@ -70,4 +78,26 @@ func getTableInput(tableName string) *dynamodb.CreateTableInput {
 		},
 		TableName: aws.String(tableName),
 	}
+}
+
+func createTable(db *dynamodb.Client, tableName string) error {
+	req := db.CreateTableRequest(getTableInput(tableName))
+	_, err := req.Send(context.Background())
+	return err
+}
+
+func deleteTable(db *dynamodb.Client, tableName string) error {
+	req := db.DeleteTableRequest(&dynamodb.DeleteTableInput{TableName: aws.String(tableName)})
+	_, err := req.Send(context.Background())
+	return err
+}
+
+func reinitializeTable(db *dynamodb.Client, tableName string) error {
+	err := deleteTable(db, tableName)
+	if err != nil {
+		return err
+	}
+
+	err = createTable(db, tableName)
+	return err
 }
