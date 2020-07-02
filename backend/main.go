@@ -37,4 +37,5 @@ func main() {
 
 	cHandler := cors.Default().Handler(mux)
 	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%v", port), cHandler))
+
 }

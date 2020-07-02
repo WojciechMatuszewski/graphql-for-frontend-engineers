@@ -11,7 +11,7 @@ import (
 
 const (
 	DBDefaultTableName = "workshop-table"
-	DBDefaultEndpoint  = "http://localhost:8000"
+	DBDefaultEndpoint  = "http://dynamodb:8000"
 )
 
 func New(endpoint string, tableName string) (*dynamodb.Client, error) {
@@ -36,17 +36,19 @@ func New(endpoint string, tableName string) (*dynamodb.Client, error) {
 }
 
 func NewConfig(endpoint string) aws.Config {
-	cfg, err := external.LoadDefaultAWSConfig(aws.StaticCredentialsProvider{Value: aws.Credentials{
-		SecretAccessKey: "local",
-		SessionToken:    "local",
-		Source:          "local",
-		CanExpire:       false,
-	}})
+	cfg, err := external.LoadDefaultAWSConfig()
 	if err != nil {
 		panic(err.Error())
 	}
 
-	cfg.Region = "local"
+	cfg.Credentials = aws.StaticCredentialsProvider{Value: aws.Credentials{
+		AccessKeyID:     "local",
+		SecretAccessKey: "local",
+		SessionToken:    "local",
+		Source:          "local",
+		CanExpire:       false,
+	}}
+	cfg.Region = "eu-central-1"
 	cfg.EndpointResolver = aws.ResolveWithEndpointURL(endpoint)
 
 	return cfg

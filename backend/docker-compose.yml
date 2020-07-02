@@ -1,0 +1,20 @@
+version: "3"
+
+services:
+    dynamo:
+        container_name: dynamodb
+        restart: unless-stopped
+        image: amazon/dynamodb-local
+        ports:
+        - "8000:8000"
+    api:
+        depends_on:
+          - dynamo
+        restart: unless-stopped
+        build:
+          dockerfile: Dockerfile
+          context: .
+        ports:
+        - "4000:4000"
+        
+    
