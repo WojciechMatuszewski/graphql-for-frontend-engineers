@@ -11,3 +11,4 @@ The workshop will cover:
 - Testing
 - Optimistic Updates
 - Error handling
+- Maybe subscriptions, we will see.
