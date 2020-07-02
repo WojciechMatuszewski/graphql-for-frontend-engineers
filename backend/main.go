@@ -9,6 +9,10 @@ import (
 	"backend/pkg/gql"
 	"backend/pkg/message"
 
+	"github.com/rs/cors"
+
+	"github.com/99designs/gqlgen/graphql/playground"
+
 	"github.com/99designs/gqlgen/graphql/handler"
 )
 
@@ -25,6 +29,12 @@ func main() {
 		MessageStore: msgStore,
 	}}))
 
-	http.Handle("/graphql", srv)
-	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%v", port), nil))
+	mux := http.NewServeMux()
+
+	mux.Handle("/graphql", srv)
+	mux.Handle("/playground",
+		playground.Handler("GraphQL playground", "/graphql"))
+
+	cHandler := cors.Default().Handler(mux)
+	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%v", port), cHandler))
 }

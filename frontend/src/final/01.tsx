@@ -7,7 +7,7 @@ import {
   HttpLink,
   InMemoryCache
 } from "@apollo/client";
-import { getBackendURI } from "../utils/backend";
+import { getBackendURI } from "../apollo/Provider";
 
 // create necessary constructs
 const httpLink = new HttpLink({ uri: getBackendURI() });

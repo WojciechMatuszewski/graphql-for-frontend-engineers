@@ -1,5 +1,5 @@
 import { httpLink } from "../final/01.extra-2";
-import { getBackendURI } from "../utils/backend";
+import { getBackendURI } from "../apollo/Provider";
 
 describe("01.extra-2 httpLink test", () => {
   it("refers to the correct URI", () => {

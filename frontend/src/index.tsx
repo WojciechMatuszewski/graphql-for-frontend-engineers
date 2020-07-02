@@ -1,5 +1,5 @@
-import codegen from 'codegen.macro'
+import codegen from "codegen.macro";
 
-codegen`module.exports = require('@kentcdodds/react-workshop-app/codegen')`
+codegen`module.exports = require('@kentcdodds/react-workshop-app/codegen')`;
 
-export {}
+export {};

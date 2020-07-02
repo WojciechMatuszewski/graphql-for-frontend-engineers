@@ -9,7 +9,7 @@ type Message struct {
 func (m Message) AsItem() messageItem {
 	return messageItem{
 		Key:     NewKey(m.CreatedAt, m.ID),
-		Content: "",
+		Content: m.Content,
 	}
 }
 
