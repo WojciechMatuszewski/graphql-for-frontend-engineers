@@ -9,9 +9,11 @@ import {
   Button,
   Form,
   Input,
-  Select
+  Select,
+  Space
 } from "antd";
 import { UserOutlined } from "@ant-design/icons";
+import { useForm } from "antd/lib/form/Form";
 
 export type User = {
   firstName: string;
@@ -128,19 +130,23 @@ function UserProfileForm({
       >
         <Input placeholder="Last name" />
       </Form.Item>
-      <Form.Item name="hobbies" label="Hobbies">
-        <Select mode="tags" />
+      <Form.Item label="Hobbies" name="hobbies">
+        <Select mode="tags" className="antd" />
       </Form.Item>
       <Form.Item>
-        <Button loading={loading} htmlType="submit" type="primary">
-          Submit
-        </Button>
-        <Button htmlType="button" onClick={onCancel} disabled={loading}>
-          Cancel
-        </Button>
+        <Space size="small">
+          <Button loading={loading} htmlType="submit" type="primary">
+            Submit
+          </Button>
+          <Button htmlType="button" onClick={onCancel} disabled={loading}>
+            Cancel
+          </Button>
+        </Space>
       </Form.Item>
     </Form>
   );
 }
+
+function HobbiesSelect() {}
 
 export { UserProfile };
