@@ -1,5 +1,6 @@
 import React from "react";
-// 💯 Tests. Look into `__tests__/02.extra-1`
+// 💯 Tests.
+// Look into `__tests__/02.extra-1`
 
 import { ApolloClientSimpleProvider } from "../apollo/Provider";
 import { ChatMessagesList } from "../ui/Chat";

@@ -1,37 +1,41 @@
 import React from "react";
-// 💯 Tests.
-// Look into __tests__/03.extra-1
+// 💯 Using a fragment.
 
 import { ApolloClientSimpleProvider } from "../apollo/Provider";
 import { gql, useMutation, useQuery } from "@apollo/client";
 import { UserProfile } from "../ui/User";
 
-export const EXERCISE3_EXTRA1_USER_QUERY = gql`
-  query Exercise3Extra1User {
-    user {
-      firstName
-      lastName
-      id
-      hobbies
-    }
+const EXERCISE3_EXTRA2_USER_FRAGMENT = gql`
+  fragment Exercise3Extra2Fragment on User {
+    firstName
+    lastName
+    id
+    hobbies
   }
 `;
 
-export const EXERCISE3_EXTRA1_USER_MUTATION = gql`
-  mutation Exercise3Extra1User($input: UpdateUserInput!) {
-    updateUser(input: $input) {
-      firstName
-      lastName
-      id
-      hobbies
+const EXERCISE3_EXTRA2_USER_QUERY = gql`
+  query Exercise3FinalUser {
+    user {
+      ...Exercise3Extra2Fragment
     }
   }
+  ${EXERCISE3_EXTRA2_USER_FRAGMENT}
+`;
+
+export const EXERCISE3_EXTRA2_USER_MUTATION = gql`
+  mutation Exercise3FinalUser($input: UpdateUserInput!) {
+    updateUser(input: $input) {
+      ...Exercise3Extra2Fragment
+    }
+  }
+  ${EXERCISE3_EXTRA2_USER_FRAGMENT}
 `;
 
 function App() {
-  const { loading, data, error } = useQuery(EXERCISE3_EXTRA1_USER_QUERY);
+  const { loading, data } = useQuery(EXERCISE3_EXTRA2_USER_QUERY);
   const [mutate, { loading: onEditLoading }] = useMutation(
-    EXERCISE3_EXTRA1_USER_MUTATION
+    EXERCISE3_EXTRA2_USER_MUTATION
   );
 
   async function handleOnEdit(user: any) {
@@ -57,5 +61,4 @@ function Usage() {
   );
 }
 
-export { App };
 export default Usage;
