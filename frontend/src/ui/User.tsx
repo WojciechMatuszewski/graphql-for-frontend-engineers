@@ -13,7 +13,6 @@ import {
   Space
 } from "antd";
 import { UserOutlined } from "@ant-design/icons";
-import { useForm } from "antd/lib/form/Form";
 
 export type User = {
   firstName: string;
@@ -146,7 +145,5 @@ function UserProfileForm({
     </Form>
   );
 }
-
-function HobbiesSelect() {}
 
 export { UserProfile };

@@ -29,7 +29,7 @@ export const EXERCISE3_EXTRA1_USER_MUTATION = gql`
 `;
 
 function App() {
-  const { loading, data, error } = useQuery(EXERCISE3_EXTRA1_USER_QUERY);
+  const { loading, data } = useQuery(EXERCISE3_EXTRA1_USER_QUERY);
   const [mutate, { loading: onEditLoading }] = useMutation(
     EXERCISE3_EXTRA1_USER_MUTATION
   );

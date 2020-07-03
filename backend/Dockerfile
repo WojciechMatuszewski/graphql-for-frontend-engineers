@@ -7,8 +7,6 @@ ENV GO111MODULE=on \
 
 RUN mkdir /build
 
-RUN ls
-
 WORKDIR /build
 
 COPY go.mod .
