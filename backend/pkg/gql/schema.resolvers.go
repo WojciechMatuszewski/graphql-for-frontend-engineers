@@ -4,10 +4,10 @@ package gql
 // will be copied through when generating and any unknown code will be moved to the end.
 
 import (
-	"context"
-
 	"backend/pkg/gql/model"
 	"backend/pkg/message"
+	"backend/pkg/user"
+	"context"
 )
 
 func (r *mutationResolver) Message(ctx context.Context, input model.MessageInput) (*message.Message, error) {
@@ -15,8 +15,18 @@ func (r *mutationResolver) Message(ctx context.Context, input model.MessageInput
 	return &out, err
 }
 
+func (r *mutationResolver) UpdateUser(ctx context.Context, input model.UpdateUserInput) (*user.User, error) {
+	out, err := r.UserStore.UpdateUser(ctx, input)
+	return &out, err
+}
+
 func (r *queryResolver) Messages(ctx context.Context, limit *int) ([]message.Message, error) {
 	return r.MessageStore.GetMessages(ctx, int64(*limit))
+}
+
+func (r *queryResolver) User(ctx context.Context) (*user.User, error) {
+	out, err := r.UserStore.GetUser(ctx)
+	return &out, err
 }
 
 // Mutation returns MutationResolver implementation.

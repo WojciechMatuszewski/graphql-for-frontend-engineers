@@ -8,6 +8,7 @@ import (
 	"backend/pkg/db"
 	"backend/pkg/gql"
 	"backend/pkg/message"
+	"backend/pkg/user"
 
 	"github.com/rs/cors"
 
@@ -25,12 +26,17 @@ func main() {
 	}
 
 	msgStore := message.NewStore(d, db.DBDefaultTableName)
+	msgStore.Seed()
+
+	usrStore := user.NewStore(d, db.DBDefaultTableName)
+	usrStore.Seed()
+
 	srv := handler.NewDefaultServer(gql.NewExecutableSchema(gql.Config{Resolvers: &gql.Resolver{
 		MessageStore: msgStore,
+		UserStore:    usrStore,
 	}}))
 
 	mux := http.NewServeMux()
-
 	mux.Handle("/graphql", srv)
 	mux.Handle("/playground",
 		playground.Handler("GraphQL playground", "/graphql"))

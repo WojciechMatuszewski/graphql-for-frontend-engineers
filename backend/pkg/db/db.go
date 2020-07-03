@@ -59,19 +59,23 @@ func getTableInput(tableName string) *dynamodb.CreateTableInput {
 		AttributeDefinitions: []dynamodb.AttributeDefinition{
 			{AttributeType: dynamodb.ScalarAttributeTypeS, AttributeName: aws.String("pk")},
 			{AttributeType: dynamodb.ScalarAttributeTypeS, AttributeName: aws.String("sk")},
-			{AttributeType: dynamodb.ScalarAttributeTypeS, AttributeName: aws.String("lssk")},
+			{AttributeType: dynamodb.ScalarAttributeTypeS, AttributeName: aws.String("createdAt")},
 		},
 		BillingMode: dynamodb.BillingModePayPerRequest,
 		KeySchema: []dynamodb.KeySchemaElement{
 			{KeyType: "HASH", AttributeName: aws.String("pk")},
 			{KeyType: "RANGE", AttributeName: aws.String("sk")},
 		},
-		LocalSecondaryIndexes: []dynamodb.LocalSecondaryIndex{
+		GlobalSecondaryIndexes: []dynamodb.GlobalSecondaryIndex{
 			{
 				IndexName: aws.String("ByCreatedAt"),
 				KeySchema: []dynamodb.KeySchemaElement{
-					{KeyType: "HASH", AttributeName: aws.String("pk")},
-					{KeyType: "RANGE", AttributeName: aws.String("lssk")},
+					{
+						KeyType: "HASH", AttributeName: aws.String("pk"),
+					},
+					{
+						KeyType: "RANGE", AttributeName: aws.String("createdAt"),
+					},
 				},
 				Projection: &dynamodb.Projection{
 					ProjectionType: dynamodb.ProjectionTypeAll,

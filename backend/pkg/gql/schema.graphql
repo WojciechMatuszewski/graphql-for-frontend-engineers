@@ -1,9 +1,11 @@
 type Query {
     messages(limit: Int = 25): [Message!]!
+    user: User!
 }
 
 type Mutation {
     message(input: MessageInput!): Message!
+    updateUser(input: UpdateUserInput!): User!
 }
 
 type Message {
@@ -14,4 +16,17 @@ type Message {
 
 input MessageInput {
     content: String!
+}
+
+type User {
+    id: ID!
+    firstName: String!
+    lastName: String!
+    hobbies: [String!]
+}
+
+input UpdateUserInput {
+    firstName: String
+    lastName: String
+    hobbies: [String!]
 }

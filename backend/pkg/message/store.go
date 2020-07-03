@@ -2,7 +2,6 @@ package message
 
 import (
 	"context"
-	"fmt"
 	"time"
 
 	"backend/pkg/gql/model"
@@ -47,7 +46,7 @@ func (s Store) CreateMessage(ctx context.Context, input model.MessageInput) (Mes
 }
 
 func (s Store) GetMessages(ctx context.Context, limit int64) ([]Message, error) {
-	key := NewKey("", "")
+	key := NewKey("")
 	keyCond := expression.Key("pk").Equal(expression.Value(key.PK))
 	expr, err := expression.NewBuilder().WithKeyCondition(keyCond).Build()
 	if err != nil {
@@ -67,15 +66,11 @@ func (s Store) GetMessages(ctx context.Context, limit int64) ([]Message, error) 
 		return nil, err
 	}
 
-	fmt.Println(out.Items)
-
 	mItems := make([]messageItem, len(out.Items))
 	err = dynamodbattribute.UnmarshalListOfMaps(out.Items, &mItems)
 	if err != nil {
 		return nil, err
 	}
-
-	fmt.Println(mItems)
 
 	messages := make([]Message, len(mItems))
 	for i, mItem := range mItems {
