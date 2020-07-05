@@ -28,7 +28,7 @@ func TestMiddleware(t *testing.T) {
 	t.Run("when authorization is set to `secret`", func(t *testing.T) {
 		req := httptest.NewRequest("POST", "/", nil)
 		rec := httptest.NewRecorder()
-		rec.Header().Set("Authorization", "secret")
+		req.Header.Set("Authorization", "secret")
 
 		nextCalled := false
 		nextHandler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -45,7 +45,7 @@ func TestMiddleware(t *testing.T) {
 		rec := httptest.NewRecorder()
 
 		exp := time.Now().Add(-1 * time.Second).Unix()
-		token, err := auth.NewToken(exp)
+		token, err := auth.IssueToken(exp)
 		if err != nil {
 			t.Fatal(err.Error())
 		}
@@ -66,11 +66,11 @@ func TestMiddleware(t *testing.T) {
 		rec := httptest.NewRecorder()
 
 		exp := time.Now().Add(30 * time.Second).Unix()
-		token, err := auth.NewToken(exp)
+		token, err := auth.IssueToken(exp)
 		if err != nil {
 			t.Fatal(err.Error())
 		}
-		rec.Header().Set("Authorization", token)
+		req.Header.Set("Authorization", token)
 
 		nextCalled := false
 		nextHandler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {

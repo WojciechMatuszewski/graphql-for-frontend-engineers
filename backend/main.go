@@ -38,7 +38,7 @@ func main() {
 	}}))
 
 	mux := http.NewServeMux()
-	mux.Handle("/get-token", auth.GetTokenHandler())
+	mux.Handle("/get-token", auth.GetTokenHandler(auth.IssueToken))
 	mux.Handle("/graphql", auth.Middleware(srv))
 	mux.Handle("/playground",
 		playground.Handler("GraphQL playground", "/graphql"))

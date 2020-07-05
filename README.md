@@ -26,7 +26,7 @@ You will need a couple of things installed on your local machine:
 
 To make sure everything is setup and that you are ready for the workshop run:
 
-```
+```sh
 make validate
 ```
 
@@ -34,7 +34,7 @@ make validate
 
 **After validation is successfull** please run:
 
-```
+```sh
 make start
 ```
 

@@ -1,6 +1,6 @@
 import React from "react";
 import {
-  getBackendURI,
+  getBackendGraphQLURI,
   ApolloClientAuthorizationProvider,
   getMockAuthorizationToken
 } from "../apollo/Provider";
@@ -16,7 +16,7 @@ import {
 import { UserProfile, User } from "../ui/User";
 
 const httpLink = new HttpLink({
-  uri: getBackendURI()
+  uri: getBackendGraphQLURI()
 });
 
 const authMiddlewareLink = new ApolloLink((operation, forward) => {

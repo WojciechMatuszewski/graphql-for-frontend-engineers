@@ -8,7 +8,7 @@ import (
 // Middleware checks the tokens
 func Middleware(next http.Handler) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		token := w.Header().Get("Authorization")
+		token := r.Header.Get("Authorization")
 		if token == "secret" {
 			next.ServeHTTP(w, r)
 			return

@@ -4,12 +4,15 @@ import {
   ApolloProvider,
   HttpLink,
   InMemoryCache,
-  ApolloLink,
   NormalizedCacheObject
 } from "@apollo/client";
 
-function getBackendURI() {
+function getBackendGraphQLURI() {
   return "http://localhost:4000/graphql";
+}
+
+function getBackendTokenURI() {
+  return "http://localhost:4000/get-token";
 }
 
 function getMockAuthorizationToken() {
@@ -21,7 +24,7 @@ type Props = {
 };
 
 const httpLink = new HttpLink({
-  uri: getBackendURI(),
+  uri: getBackendGraphQLURI(),
   headers: {
     Authorization: getMockAuthorizationToken()
   }
@@ -49,7 +52,8 @@ function ApolloClientAuthorizationProvider({
 
 export {
   ApolloClientSimpleProvider,
-  getBackendURI,
+  getBackendGraphQLURI,
+  getBackendTokenURI,
   getMockAuthorizationToken,
   ApolloClientAuthorizationProvider
 };

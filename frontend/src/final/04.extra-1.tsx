@@ -1,7 +1,7 @@
 import React from "react";
 // 💯 Tests for the link
 import {
-  getBackendURI,
+  getBackendGraphQLURI,
   ApolloClientAuthorizationProvider,
   getMockAuthorizationToken
 } from "../apollo/Provider";
@@ -17,7 +17,7 @@ import {
 import { UserProfile, User } from "../ui/User";
 
 const httpLink = new HttpLink({
-  uri: getBackendURI()
+  uri: getBackendGraphQLURI()
 });
 
 // our newly created link is now exported.

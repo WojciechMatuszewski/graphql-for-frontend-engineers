@@ -16,7 +16,7 @@ func TestHandler(t *testing.T) {
 		req := httptest.NewRequest("POST", "/", nil)
 		rec := httptest.NewRecorder()
 
-		auth.GetTokenHandler(auth.NewToken).ServeHTTP(rec, req)
+		auth.GetTokenHandler(auth.IssueToken).ServeHTTP(rec, req)
 		assert.Equal(t, http.StatusMethodNotAllowed, rec.Result().StatusCode)
 	})
 

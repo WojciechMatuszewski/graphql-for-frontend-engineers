@@ -8,9 +8,9 @@ import {
   HttpLink,
   InMemoryCache
 } from "@apollo/client";
-import { getBackendURI } from "../apollo/Provider";
+import { getBackendGraphQLURI } from "../apollo/Provider";
 
-const httpLink = new HttpLink({ uri: getBackendURI() });
+const httpLink = new HttpLink({ uri: getBackendGraphQLURI() });
 const cache = new InMemoryCache();
 
 const client = new ApolloClient({ link: httpLink, cache });
