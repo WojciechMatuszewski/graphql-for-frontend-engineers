@@ -19,7 +19,7 @@ const httpLink = new HttpLink({
   uri: getBackendURI()
 });
 
-const authMiddleware = new ApolloLink((operation, forward) => {
+const authMiddlewareLink = new ApolloLink((operation, forward) => {
   const prevHeaders = operation.getContext().headers || {};
   operation.setContext({
     headers: {
@@ -31,7 +31,7 @@ const authMiddleware = new ApolloLink((operation, forward) => {
 });
 
 const cache = new InMemoryCache();
-const combinedLinks = ApolloLink.from([authMiddleware, httpLink]);
+const combinedLinks = ApolloLink.from([authMiddlewareLink, httpLink]);
 const client = new ApolloClient({ cache, link: combinedLinks });
 
 const EXERCISE4_FINAL_USER_QUERY = gql`
