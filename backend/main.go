@@ -5,6 +5,7 @@ import (
 	"log"
 	"net/http"
 
+	"backend/pkg/auth"
 	"backend/pkg/db"
 	"backend/pkg/gql"
 	"backend/pkg/message"
@@ -37,11 +38,12 @@ func main() {
 	}}))
 
 	mux := http.NewServeMux()
-	mux.Handle("/graphql", srv)
+	mux.Handle("/get-token", auth.GetTokenHandler())
+	mux.Handle("/graphql", auth.Middleware(srv))
 	mux.Handle("/playground",
 		playground.Handler("GraphQL playground", "/graphql"))
 
-    cHandler := cors.AllowAll().Handler(mux)
+	cHandler := cors.AllowAll().Handler(mux)
 	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%v", port), cHandler))
 
 }
