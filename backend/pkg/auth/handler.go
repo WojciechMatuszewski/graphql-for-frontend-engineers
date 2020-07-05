@@ -14,8 +14,10 @@ type Response struct {
 	Token string `json:"token"`
 }
 
+type TokenIssuer func(exp int64) (string, error)
+
 // GetTokenHandler returns a new token
-func GetTokenHandler() http.HandlerFunc {
+func GetTokenHandler(tokenIssuer TokenIssuer) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != "GET" {
 			http.Error(w, http.StatusText(http.StatusMethodNotAllowed),
@@ -24,7 +26,7 @@ func GetTokenHandler() http.HandlerFunc {
 		}
 
 		w.Header().Set("Content-Type", "application/json")
-		t, err := newToken(time.Now().Add(10 * time.Second).Unix())
+		t, err := tokenIssuer(time.Now().Add(10 * time.Second).Unix())
 		if err != nil {
 			http.Error(w, http.StatusText(http.StatusInternalServerError),
 				http.StatusInternalServerError)

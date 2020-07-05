@@ -6,18 +6,18 @@ import (
 
 const tokenSecret = "secret"
 
-// ValidateToken validates the token
-func validateToken(token string) error {
-	_, err := jwt.Parse(token, func(t *jwt.Token) (interface{}, error) {
-		return tokenSecret, nil
-	})
-	return err
-}
-
-// NewToken creates new token
-func newToken(exp int64) (string, error) {
-	token := jwt.NewWithClaims(jwt.SigningMethodES256, jwt.StandardClaims{
+// IssueToken creates new token
+func IssueToken(exp int64) (string, error) {
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.StandardClaims{
 		ExpiresAt: exp,
 	})
 	return token.SignedString([]byte(tokenSecret))
+}
+
+// ValidateToken validates the token
+func validateToken(token string) error {
+	_, err := jwt.Parse(token, func(t *jwt.Token) (interface{}, error) {
+		return []byte(tokenSecret), nil
+	})
+	return err
 }
