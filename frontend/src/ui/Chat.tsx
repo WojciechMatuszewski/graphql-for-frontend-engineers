@@ -1,5 +1,6 @@
 import React from "react";
-import { Comment, List, Avatar } from "antd";
+import { Comment, List, Avatar, Input, Form } from "antd";
+import { Store } from "antd/lib/form/interface";
 
 export type Message = {
     id: string;
@@ -54,4 +55,44 @@ function ChatMessagesList({ messages, loading }: ChatMessagesListProps) {
     );
 }
 
-export { ChatMessage, ChatMessagesList };
+type ChatMessagesInputProps = {
+    onSubmit: (message: string) => void;
+};
+
+function ChatMessagesInput({ onSubmit }: ChatMessagesInputProps) {
+    function handleOnFinish(store: Store) {
+        console.log(store);
+    }
+
+    return (
+        <Form
+            onFinish={handleOnFinish}
+            name="chatMessages"
+            initialValues={{ message: "" }}
+        >
+            <Form.Item
+                name="message"
+                rules={[{ required: true, message: "Field required" }]}
+            >
+                <Input placeholder="Type here..." />
+            </Form.Item>
+        </Form>
+    );
+}
+
+type ChatProps = {
+    messages: Message[];
+    loading: boolean;
+    onMessage: (message: string) => void;
+};
+
+function Chat({ messages, loading, onMessage }: ChatProps) {
+    return (
+        <React.Fragment>
+            <ChatMessagesList messages={messages} loading={loading} />
+            <ChatMessagesInput onSubmit={onMessage} />
+        </React.Fragment>
+    );
+}
+
+export { ChatMessage, ChatMessagesList, Chat };

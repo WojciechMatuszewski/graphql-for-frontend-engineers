@@ -41,7 +41,7 @@ func main() {
 	mux.Handle("/playground",
 		playground.Handler("GraphQL playground", "/graphql"))
 
-	cHandler := cors.Default().Handler(mux)
+    cHandler := cors.AllowAll().Handler(mux)
 	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%v", port), cHandler))
 
 }

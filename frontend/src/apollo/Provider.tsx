@@ -1,27 +1,46 @@
 import React from "react";
 import {
-  ApolloClient,
-  ApolloProvider,
-  HttpLink,
-  InMemoryCache
+    ApolloClient,
+    ApolloProvider,
+    HttpLink,
+    InMemoryCache,
+    ApolloLink,
+    NormalizedCacheObject
 } from "@apollo/client";
 
 function getBackendURI() {
-  return "http://localhost:4000/graphql";
+    return "http://localhost:4000/graphql";
 }
 
 type Props = {
-  children: React.ReactNode;
+    children: React.ReactNode;
 };
 
-const httpLink = new HttpLink({ uri: getBackendURI() });
+const httpLink = new HttpLink({
+    uri: getBackendURI()
+});
 const cache = new InMemoryCache();
 
-const client = new ApolloClient({ link: httpLink, cache: cache });
+const simpleClient = new ApolloClient({ link: httpLink, cache: cache });
 
 // simple as in does not contain any additional links
 function ApolloClientSimpleProvider({ children }: Props) {
-  return <ApolloProvider client={client}>{children}</ApolloProvider>;
+    return <ApolloProvider client={simpleClient}>{children}</ApolloProvider>;
 }
 
-export { ApolloClientSimpleProvider, getBackendURI };
+type AuthorizationProviderProps = {
+    client: ApolloClient<NormalizedCacheObject>;
+    children: React.ReactNode;
+};
+
+function ApolloClientAuthorizationProvider({
+    children,
+    client
+}: AuthorizationProviderProps) {
+    return <ApolloProvider client={client}>{children}</ApolloProvider>;
+}
+export {
+    ApolloClientSimpleProvider,
+    getBackendURI,
+    ApolloClientAuthorizationProvider
+};
