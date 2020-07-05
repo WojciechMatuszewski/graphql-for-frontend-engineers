@@ -1,12 +1,12 @@
 import React from "react";
-// 💯 Token afterware
+// 💯Afterware which fetches the token
 
 function App() {
-    return null;
+  return null;
 }
 
 function Usage() {
-    return <App />;
+  return <App />;
 }
 
 export default Usage;

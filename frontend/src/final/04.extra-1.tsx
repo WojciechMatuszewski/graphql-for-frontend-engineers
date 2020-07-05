@@ -1,12 +1,12 @@
 import React from "react";
-// 💯 `Authorization` link
+// 💯Tests for the link
 
 function App() {
-    return null;
+  return null;
 }
 
 function Usage() {
-    return <App />;
+  return <App />;
 }
 
 export default Usage;
