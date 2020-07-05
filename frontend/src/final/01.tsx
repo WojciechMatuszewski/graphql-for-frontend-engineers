@@ -7,10 +7,15 @@ import {
   HttpLink,
   InMemoryCache
 } from "@apollo/client";
-import { getBackendURI } from "../apollo/Provider";
+import { getBackendURI, getMockAuthorizationToken } from "../apollo/Provider";
 
 // create necessary constructs
-const httpLink = new HttpLink({ uri: getBackendURI() });
+const httpLink = new HttpLink({
+  uri: getBackendURI(),
+  headers: {
+    Authorization: getMockAuthorizationToken()
+  }
+});
 const cache = new InMemoryCache();
 
 const client = new ApolloClient({ link: httpLink, cache });
