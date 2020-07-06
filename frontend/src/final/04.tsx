@@ -1,94 +1,100 @@
 import React from "react";
 import {
-  getBackendGraphQLURI,
-  ApolloClientAuthorizationProvider,
-  getMockAuthorizationToken
+    getBackendGraphQLURI,
+    getMockAuthorizationToken
 } from "../apollo/Provider";
 import {
-  HttpLink,
-  ApolloClient,
-  InMemoryCache,
-  gql,
-  useQuery,
-  useMutation,
-  ApolloLink
+    HttpLink,
+    ApolloClient,
+    InMemoryCache,
+    gql,
+    useQuery,
+    useMutation,
+    ApolloLink,
+    ApolloProvider
 } from "@apollo/client";
 import { UserProfile, User } from "../ui/User";
 
 const httpLink = new HttpLink({
-  uri: getBackendGraphQLURI()
+    uri: getBackendGraphQLURI()
 });
 
 const authMiddlewareLink = new ApolloLink((operation, forward) => {
-  const prevHeaders = operation.getContext().headers || {};
-  operation.setContext({
-    headers: {
-      ...prevHeaders,
-      Authorization: getMockAuthorizationToken()
-    }
-  });
-  return forward(operation);
+    const prevHeaders = operation.getContext().headers || {};
+    operation.setContext({
+        headers: {
+            ...prevHeaders,
+            Authorization: getMockAuthorizationToken()
+        }
+    });
+
+    return forward(operation);
 });
 
 const cache = new InMemoryCache();
 const combinedLinks = ApolloLink.from([authMiddlewareLink, httpLink]);
 const client = new ApolloClient({ cache, link: combinedLinks });
 
+function App() {
+    return (
+        <ApolloProvider client={client}>
+            <UserProfileStuff />
+        </ApolloProvider>
+    );
+}
+
+// ------ implementation details \/ ----- /
 const EXERCISE4_FINAL_USER_QUERY = gql`
-  query Exercise4User {
-    user {
-      id
-      firstName
-      hobbies
-      lastName
+    query Exercise4User {
+        user {
+            id
+            firstName
+            hobbies
+            lastName
+        }
     }
-  }
 `;
 
 const EXERCISE4_FINAL_USER_MUTATION = gql`
-  mutation Exercise3FinalUser($input: UpdateUserInput!) {
-    updateUser(input: $input) {
-      firstName
-      lastName
-      id
-      hobbies
+    mutation Exercise3FinalUser($input: UpdateUserInput!) {
+        updateUser(input: $input) {
+            firstName
+            lastName
+            id
+            hobbies
+        }
     }
-  }
 `;
 
-function App() {
-  const { data, loading: queryLoading, error: queryError } = useQuery<{
-    user: User;
-  }>(EXERCISE4_FINAL_USER_QUERY);
+function UserProfileStuff() {
+    const { data, loading: queryLoading, error: queryError } = useQuery<{
+        user: User;
+    }>(EXERCISE4_FINAL_USER_QUERY);
 
-  const [
-    mutate,
-    { loading: onEditLoading, error: updatingError }
-  ] = useMutation(EXERCISE4_FINAL_USER_MUTATION);
+    const [
+        mutate,
+        { loading: onEditLoading, error: updatingError }
+    ] = useMutation(EXERCISE4_FINAL_USER_MUTATION);
 
-  async function handleOnEdit(user: any) {
-    await mutate({ variables: { input: user } });
-  }
+    async function handleOnEdit(user: any) {
+        await mutate({ variables: { input: user } });
+    }
 
-  if (queryError || updatingError) return <p> error ...</p>;
+    if (queryError || updatingError) return <p> error ...</p>;
 
-  if (queryLoading || !data) return <p>loading...</p>;
+    if (queryLoading || !data) return <p>loading...</p>;
 
-  return (
-    <UserProfile
-      user={data.user}
-      onEditLoading={onEditLoading}
-      onEdit={handleOnEdit}
-    />
-  );
+    return (
+        <UserProfile
+            user={data.user}
+            onEditLoading={onEditLoading}
+            onEdit={handleOnEdit}
+        />
+    );
 }
 
 function Usage() {
-  return (
-    <ApolloClientAuthorizationProvider client={client}>
-      <App />
-    </ApolloClientAuthorizationProvider>
-  );
+    return <App />;
 }
 
 export default Usage;
