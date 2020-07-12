@@ -1,0 +1,19 @@
+overwrite: true
+schema:
+  - http://localhost:4000/graphql:
+      headers:
+        Authorization: secret
+documents: ./src/final/05.tsx
+generates:
+  ./src/final/codegen/generated/index.tsx:
+    plugins:
+      - typescript
+      - typescript-operations:
+          avoidOptionals: true
+      - typescript-react-apollo
+    config:
+      withComponent: false
+      withHOC: false
+      withHooks: true
+      reactApolloVersion: 3
+      gqlImport: "@apollo/client#gql"

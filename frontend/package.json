@@ -14,6 +14,10 @@
   },
   "devDependencies": {
     "@craco/craco": "^5.6.4",
+    "@graphql-codegen/cli": "1.13.3",
+    "@graphql-codegen/typescript": "1.13.3",
+    "@graphql-codegen/typescript-operations": "1.13.3",
+    "@graphql-codegen/typescript-react-apollo": "1.13.3",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.5.0",
     "@testing-library/user-event": "^7.2.1",
@@ -31,10 +35,14 @@
   "scripts": {
     "start": "craco start",
     "build": "craco build",
-    "test": "craco test --watchAll=false"
+    "test": "craco test --watchAll=false",
+    "codegen:final": "graphql-codegen --config ./src/final/codegen/codegen.yml"
   },
   "eslintConfig": {
-    "extends": "react-app"
+    "extends": "react-app",
+    "rules": {
+      "eqeqeq": "off"
+    }
   },
   "babel": {
     "presets": [
