@@ -1,10 +1,4 @@
-import {
-  gql,
-  ApolloLink,
-  execute,
-  Operation,
-  Observable
-} from "@apollo/client";
+import { gql, ApolloLink, execute, Observable } from "@apollo/client";
 import { wait } from "@testing-library/react";
 import { createAuthAfterwareLink } from "../final/04.extra-3";
 
