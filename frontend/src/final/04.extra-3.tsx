@@ -1,5 +1,5 @@
 import React from "react";
-// 💯 Afterware which fetches the link
+// 💯Tests for the afterware link
 import { getBackendGraphQLURI, getBackendTokenURI } from "../apollo/Provider";
 import {
   HttpLink,
@@ -52,29 +52,35 @@ async function fetchToken() {
   return result;
 }
 
-const authAfterwareLink = onError(({ networkError, operation, forward }) => {
-  if (!networkError) return forward(operation);
+// Notice the dependency injection
+type TokenFetcher = () => Promise<{ token: string }>;
+function createAuthAfterwareLink(tokenFetcher: TokenFetcher) {
+  return onError(({ networkError, operation, forward, graphQLErrors }) => {
+    if (!networkError) return forward(operation);
 
-  if (!isServerError(networkError)) return forward(operation);
-  if (networkError.statusCode != 401) return forward(operation);
+    if (!isServerError(networkError)) return forward(operation);
+    if (networkError.statusCode != 403) return forward(operation);
 
-  return fromPromise(fetchToken()).flatMap(({ token }) => {
-    setToken(token);
-    const prevHeaders = operation.getContext().headers || {};
-    operation.setContext({
-      headers: {
-        ...prevHeaders,
-        Authorization: token
-      }
+    return fromPromise(Promise.resolve(tokenFetcher())).flatMap(({ token }) => {
+      setToken(token);
+
+      const prevHeaders = operation.getContext().headers || {};
+      operation.setContext({
+        headers: {
+          ...prevHeaders,
+          Authorization: token
+        }
+      });
+
+      return forward(operation);
     });
-    return forward(operation);
   });
-});
+}
 
 const cache = new InMemoryCache();
 const combinedLinks = ApolloLink.from([
   authMiddlewareLink,
-  authAfterwareLink,
+  createAuthAfterwareLink(fetchToken),
   httpLink
 ]);
 const client = new ApolloClient({ cache, link: combinedLinks });
@@ -141,4 +147,5 @@ function Usage() {
   return <App />;
 }
 
+export { createAuthAfterwareLink };
 export default Usage;
