@@ -39,11 +39,16 @@ func main() {
 
 	mux := http.NewServeMux()
 	mux.Handle("/get-token", auth.GetTokenHandler(auth.IssueToken))
+
+	// workshop will be using this route
 	mux.Handle("/graphql", auth.Middleware(srv))
+
+	// disable authentication for this specific route
+	mux.Handle("/graphql-playground", srv)
+
 	mux.Handle("/playground",
-		playground.Handler("GraphQL playground", "/graphql"))
+		playground.Handler("GraphQL playground", "/graphql-playground"))
 
 	cHandler := cors.AllowAll().Handler(mux)
 	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%v", port), cHandler))
-
 }

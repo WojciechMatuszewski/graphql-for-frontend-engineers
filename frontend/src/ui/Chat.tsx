@@ -1,98 +1,122 @@
 import React from "react";
 import { Comment, List, Avatar, Input, Form } from "antd";
 import { Store } from "antd/lib/form/interface";
+import { useForm } from "antd/lib/form/Form";
 
 export type Message = {
-    id: string;
-    content: string;
-    createdAt: string;
+  id: string;
+  content: string;
+  createdAt: string;
 };
 
 type ChatMessageProps = {
-    message: Message;
+  message: Message;
 };
 
 function ChatMessage({ message }: ChatMessageProps) {
-    return (
-        <Comment
-            content={message.content}
-            author="Workshop participant"
-            avatar={
-                <Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />
-            }
-            style={{ wordBreak: "break-all" }}
-        />
-    );
+  return (
+    <Comment
+      content={message.content}
+      author="Workshop participant"
+      avatar={
+        <Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />
+      }
+      style={{ wordBreak: "break-all" }}
+    />
+  );
 }
 
 type ChatMessagesListProps = {
-    messages: Message[];
-    loading: boolean;
+  messages: Message[];
+  loading?: boolean;
 };
 
 function ChatMessagesList({ messages, loading }: ChatMessagesListProps) {
-    return (
-        <List
-            bordered={true}
-            dataSource={messages}
-            loading={loading}
-            header="Messages"
-            itemLayout="horizontal"
-            rowKey={message => message.id}
-            style={{
-                maxWidth: "500px",
-                width: "100%",
-                minWidth: "300px",
-                paddingLeft: 24,
-                paddingRight: 24
-            }}
-            renderItem={message => (
-                <li>
-                    <ChatMessage message={message} />
-                </li>
-            )}
-        />
-    );
+  React.useEffect(() => {
+    const elem = document.querySelector(".list-test");
+    if (!elem) return;
+    elem.scrollTop = elem.scrollHeight;
+  }, []);
+
+  React.useLayoutEffect(() => {
+    const elem = document.querySelector(".list-test");
+    if (!elem) return;
+    elem.scrollTop = elem.scrollHeight;
+  }, [messages]);
+
+  return (
+    <List
+      className="list-test"
+      bordered={true}
+      dataSource={messages}
+      loading={loading}
+      header="Messages"
+      itemLayout="horizontal"
+      rowKey={(message) => message.id}
+      style={{
+        maxWidth: "500px",
+        width: "100%",
+        minWidth: "300px",
+        paddingLeft: 24,
+        paddingRight: 24,
+        maxHeight: 300,
+        overflowY: "scroll"
+      }}
+      renderItem={(message) => (
+        <li>
+          <ChatMessage message={message} />
+        </li>
+      )}
+    />
+  );
 }
 
 type ChatMessagesInputProps = {
-    onSubmit: (message: string) => void;
+  onSubmit: (message: string) => void;
 };
 
 function ChatMessagesInput({ onSubmit }: ChatMessagesInputProps) {
-    function handleOnFinish(store: Store) {
-        console.log(store);
-    }
+  const [form] = useForm();
 
-    return (
-        <Form
-            onFinish={handleOnFinish}
-            name="chatMessages"
-            initialValues={{ message: "" }}
-        >
-            <Form.Item
-                name="message"
-                rules={[{ required: true, message: "Field required" }]}
-            >
-                <Input placeholder="Type here..." />
-            </Form.Item>
-        </Form>
-    );
+  function handleOnFinish(store: Store) {
+    onSubmit((store as { message: string }).message);
+    form.resetFields();
+  }
+
+  return (
+    <Form
+      form={form}
+      onFinish={handleOnFinish}
+      name="chatMessages"
+      initialValues={{ message: "" }}
+    >
+      <Form.Item
+        name="message"
+        rules={[{ required: true, message: "Field required" }]}
+      >
+        <Input placeholder="Type here..." />
+      </Form.Item>
+    </Form>
+  );
 }
 
 type ChatProps = {
-    messages: Message[];
-    loading: boolean;
-    onMessage: (message: string) => void;
-};
+  onMessage: (message: string) => void;
+} & ChatMessagesListProps;
 
 function Chat({ messages, loading, onMessage }: ChatProps) {
-    return (
-        <React.Fragment>
-            <ChatMessagesList messages={messages} loading={loading} />
-            <ChatMessagesInput onSubmit={onMessage} />
-        </React.Fragment>
-    );
+  return (
+    <div
+      style={{
+        maxWidth: "500px",
+        width: "100%",
+        minWidth: "300px"
+      }}
+    >
+      <ChatMessagesList messages={messages} loading={loading} />
+      <ChatMessagesInput onSubmit={onMessage} />
+    </div>
+  );
 }
 
 export { ChatMessage, ChatMessagesList, Chat };

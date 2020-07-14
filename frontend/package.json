@@ -4,7 +4,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@apollo/client": "^3.0.0-rc.10",
+    "@apollo/client": "3.0.0",
     "@apollo/link-error": "^2.0.0-beta.3",
     "@kentcdodds/react-workshop-app": "2.12.0",
     "antd": "^4.4.0",
