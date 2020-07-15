@@ -8,6 +8,7 @@ import (
 	"backend/pkg/message"
 	"backend/pkg/user"
 	"context"
+	"time"
 )
 
 func (r *mutationResolver) Message(ctx context.Context, input model.MessageInput) (*message.Message, error) {
@@ -20,7 +21,12 @@ func (r *mutationResolver) UpdateUser(ctx context.Context, input model.UpdateUse
 	return &out, err
 }
 
-func (r *queryResolver) Messages(ctx context.Context, limit *int) ([]message.Message, error) {
+func (r *queryResolver) Messages(ctx context.Context, limit *int, delay *int) ([]message.Message, error) {
+	if delay == nil || *delay == 0 {
+		return r.MessageStore.GetMessages(ctx, int64(*limit))
+	}
+
+	time.Sleep(time.Duration(*delay) * time.Millisecond)
 	return r.MessageStore.GetMessages(ctx, int64(*limit))
 }
 

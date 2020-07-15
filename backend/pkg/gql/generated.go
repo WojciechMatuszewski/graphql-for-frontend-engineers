@@ -57,7 +57,7 @@ type ComplexityRoot struct {
 	}
 
 	Query struct {
-		Messages func(childComplexity int, limit *int) int
+		Messages func(childComplexity int, limit *int, delay *int) int
 		User     func(childComplexity int) int
 	}
 
@@ -74,7 +74,7 @@ type MutationResolver interface {
 	UpdateUser(ctx context.Context, input model.UpdateUserInput) (*user.User, error)
 }
 type QueryResolver interface {
-	Messages(ctx context.Context, limit *int) ([]message.Message, error)
+	Messages(ctx context.Context, limit *int, delay *int) ([]message.Message, error)
 	User(ctx context.Context) (*user.User, error)
 }
 
@@ -148,7 +148,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Query.Messages(childComplexity, args["limit"].(*int)), true
+		return e.complexity.Query.Messages(childComplexity, args["limit"].(*int), args["delay"].(*int)), true
 
 	case "Query.user":
 		if e.complexity.Query.User == nil {
@@ -250,7 +250,7 @@ func (ec *executionContext) introspectType(name string) (*introspection.Type, er
 
 var sources = []*ast.Source{
 	&ast.Source{Name: "./pkg/gql/schema.graphql", Input: `type Query {
-    messages(limit: Int = 25): [Message!]!
+    messages(limit: Int = 25, delay: Int = 0): [Message!]!
     user: User!
 }
 
@@ -342,6 +342,14 @@ func (ec *executionContext) field_Query_messages_args(ctx context.Context, rawAr
 		}
 	}
 	args["limit"] = arg0
+	var arg1 *int
+	if tmp, ok := rawArgs["delay"]; ok {
+		arg1, err = ec.unmarshalOInt2ᚖint(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["delay"] = arg1
 	return args, nil
 }
 
@@ -589,7 +597,7 @@ func (ec *executionContext) _Query_messages(ctx context.Context, field graphql.C
 	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().Messages(rctx, args["limit"].(*int))
+		return ec.resolvers.Query().Messages(rctx, args["limit"].(*int), args["delay"].(*int))
 	})
 	if err != nil {
 		ec.Error(ctx, err)

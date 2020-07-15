@@ -1,11 +1,11 @@
 import React from "react";
 
 function App() {
-    return null;
+  return null;
 }
 
 function Usage() {
-    return <App />;
+  return <App />;
 }
 
 export default Usage;

@@ -1,5 +1,5 @@
 type Query {
-    messages(limit: Int = 25): [Message!]!
+    messages(limit: Int = 25, delay: Int = 0): [Message!]!
     user: User!
 }
 

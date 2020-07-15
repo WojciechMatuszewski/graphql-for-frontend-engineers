@@ -3,7 +3,10 @@ schema:
   - http://localhost:4000/graphql:
       headers:
         Authorization: secret
-documents: ./src/final/05.tsx
+documents:
+  - ./src/final/05.tsx
+  - ./src/final/06.tsx
+  - ./src/final/06.extra-1.tsx
 generates:
   ./src/final/codegen/generated/index.tsx:
     plugins:

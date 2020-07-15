@@ -1,12 +1,11 @@
 import React from "react";
-import { Comment, List, Avatar, Input, Form } from "antd";
+import { Comment, List, Avatar, Input, Form, Button } from "antd";
 import { Store } from "antd/lib/form/interface";
 import { useForm } from "antd/lib/form/Form";
 
 export type Message = {
   id: string;
   content: string;
-  createdAt: string;
 };
 
 type ChatMessageProps = {
@@ -96,6 +95,7 @@ function ChatMessagesInput({ onSubmit }: ChatMessagesInputProps) {
       >
         <Input placeholder="Type here..." />
       </Form.Item>
+      <Button htmlType="submit">Submit</Button>
     </Form>
   );
 }
