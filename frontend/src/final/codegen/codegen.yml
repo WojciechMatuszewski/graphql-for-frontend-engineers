@@ -7,6 +7,7 @@ documents:
   - ./src/final/05.tsx
   - ./src/final/06.tsx
   - ./src/final/06.extra-1.tsx
+  - ./src/final/06.extra-2.tsx
 generates:
   ./src/final/codegen/generated/index.tsx:
     plugins:

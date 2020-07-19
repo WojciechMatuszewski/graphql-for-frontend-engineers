@@ -1,6 +1,6 @@
 {
   "name": "react-graphql-workshop",
-  "title": "GraphQL for frontend engineers",
+  "title": "GraphQL for Frontend Engineers",
   "version": "0.1.0",
   "private": true,
   "dependencies": {

@@ -11,11 +11,21 @@ export type Scalars = {
   Float: number;
 };
 
+export type MessageInput = {
+  content: Scalars["String"];
+};
+
 export type User = {
   __typename?: "User";
   id: Scalars["ID"];
   firstName: Scalars["String"];
   lastName: Scalars["String"];
+  hobbies?: Maybe<Array<Scalars["String"]>>;
+};
+
+export type UpdateUserInput = {
+  firstName?: Maybe<Scalars["String"]>;
+  lastName?: Maybe<Scalars["String"]>;
   hobbies?: Maybe<Array<Scalars["String"]>>;
 };
 
@@ -31,16 +41,6 @@ export type MutationMessageArgs = {
 
 export type MutationUpdateUserArgs = {
   input: UpdateUserInput;
-};
-
-export type MessageInput = {
-  content: Scalars["String"];
-};
-
-export type UpdateUserInput = {
-  firstName?: Maybe<Scalars["String"]>;
-  lastName?: Maybe<Scalars["String"]>;
-  hobbies?: Maybe<Array<Scalars["String"]>>;
 };
 
 export type Query = {
@@ -79,6 +79,20 @@ export type Exercise6Extra1MessageMutationVariables = {
 };
 
 export type Exercise6Extra1MessageMutation = { __typename?: "Mutation" } & {
+  message: { __typename?: "Message" } & Pick<Message, "content" | "id">;
+};
+
+export type Exercise6Extra2MessagesQueryVariables = {};
+
+export type Exercise6Extra2MessagesQuery = { __typename?: "Query" } & {
+  messages: Array<{ __typename?: "Message" } & Pick<Message, "content" | "id">>;
+};
+
+export type Exercise6Extra2MessageMutationVariables = {
+  input: MessageInput;
+};
+
+export type Exercise6Extra2MessageMutation = { __typename?: "Mutation" } & {
   message: { __typename?: "Message" } & Pick<Message, "content" | "id">;
 };
 
@@ -259,6 +273,113 @@ export type Exercise6Extra1MessageMutationResult = ApolloReactCommon.MutationRes
 export type Exercise6Extra1MessageMutationOptions = ApolloReactCommon.BaseMutationOptions<
   Exercise6Extra1MessageMutation,
   Exercise6Extra1MessageMutationVariables
+>;
+export const Exercise6Extra2MessagesDocument = gql`
+  query Exercise6Extra2Messages {
+    messages(limit: 10) {
+      content
+      id
+    }
+  }
+`;
+
+/**
+ * __useExercise6Extra2MessagesQuery__
+ *
+ * To run a query within a React component, call `useExercise6Extra2MessagesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useExercise6Extra2MessagesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useExercise6Extra2MessagesQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useExercise6Extra2MessagesQuery(
+  baseOptions?: ApolloReactHooks.QueryHookOptions<
+    Exercise6Extra2MessagesQuery,
+    Exercise6Extra2MessagesQueryVariables
+  >
+) {
+  return ApolloReactHooks.useQuery<
+    Exercise6Extra2MessagesQuery,
+    Exercise6Extra2MessagesQueryVariables
+  >(Exercise6Extra2MessagesDocument, baseOptions);
+}
+export function useExercise6Extra2MessagesLazyQuery(
+  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
+    Exercise6Extra2MessagesQuery,
+    Exercise6Extra2MessagesQueryVariables
+  >
+) {
+  return ApolloReactHooks.useLazyQuery<
+    Exercise6Extra2MessagesQuery,
+    Exercise6Extra2MessagesQueryVariables
+  >(Exercise6Extra2MessagesDocument, baseOptions);
+}
+export type Exercise6Extra2MessagesQueryHookResult = ReturnType<
+  typeof useExercise6Extra2MessagesQuery
+>;
+export type Exercise6Extra2MessagesLazyQueryHookResult = ReturnType<
+  typeof useExercise6Extra2MessagesLazyQuery
+>;
+export type Exercise6Extra2MessagesQueryResult = ApolloReactCommon.QueryResult<
+  Exercise6Extra2MessagesQuery,
+  Exercise6Extra2MessagesQueryVariables
+>;
+export const Exercise6Extra2MessageDocument = gql`
+  mutation Exercise6Extra2Message($input: MessageInput!) {
+    message(input: $input) {
+      content
+      id
+    }
+  }
+`;
+export type Exercise6Extra2MessageMutationFn = ApolloReactCommon.MutationFunction<
+  Exercise6Extra2MessageMutation,
+  Exercise6Extra2MessageMutationVariables
+>;
+
+/**
+ * __useExercise6Extra2MessageMutation__
+ *
+ * To run a mutation, you first call `useExercise6Extra2MessageMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useExercise6Extra2MessageMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [exercise6Extra2MessageMutation, { data, loading, error }] = useExercise6Extra2MessageMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useExercise6Extra2MessageMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<
+    Exercise6Extra2MessageMutation,
+    Exercise6Extra2MessageMutationVariables
+  >
+) {
+  return ApolloReactHooks.useMutation<
+    Exercise6Extra2MessageMutation,
+    Exercise6Extra2MessageMutationVariables
+  >(Exercise6Extra2MessageDocument, baseOptions);
+}
+export type Exercise6Extra2MessageMutationHookResult = ReturnType<
+  typeof useExercise6Extra2MessageMutation
+>;
+export type Exercise6Extra2MessageMutationResult = ApolloReactCommon.MutationResult<
+  Exercise6Extra2MessageMutation
+>;
+export type Exercise6Extra2MessageMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  Exercise6Extra2MessageMutation,
+  Exercise6Extra2MessageMutationVariables
 >;
 export const Exercise6FinalMessagesDocument = gql`
   query Exercise6FinalMessages {
