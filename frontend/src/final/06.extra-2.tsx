@@ -17,6 +17,7 @@ const EXERCISE6_EXTRA2_MESSAGES_QUERY = gql`
   }
 `;
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const EXERCISE6_EXTRA2_MESSAGE_MUTATION = gql`
   mutation Exercise6Extra2Message($input: MessageInput!) {
     message(input: $input) {
@@ -32,8 +33,6 @@ function App() {
     loading: loadingMessages,
     error: messagesError
   } = useExercise6Extra2MessagesQuery();
-
-  console.log(messagesData);
 
   const [
     saveMessage,

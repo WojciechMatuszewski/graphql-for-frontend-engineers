@@ -18,6 +18,7 @@ const EXERCISE6_FINAL_MESSAGES_QUERY = gql`
   }
 `;
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const EXERCISE6_FINAL_MESSAGE_MUTATION = gql`
   mutation Exercise6FinalMessage($input: MessageInput!) {
     message(input: $input) {
