@@ -1,4 +1,4 @@
-# [WIP]GraphQL for frontend engineers
+# [WIP]GraphQL for Frontend Engineers
 
 This is a repository used during the _GraphQL for frontend engineers_ workshop.
 
