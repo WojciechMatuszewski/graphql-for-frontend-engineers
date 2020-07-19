@@ -17,3 +17,15 @@ services:
       context: .
     ports:
       - "4000:4000"
+  admin:
+    image: manhvu2507/dynamodb-admin-docker
+    restart: unless-stopped
+    depends_on:
+      - dynamo
+    environment:
+      AWS_REGION: eu-central-1
+      AWS_ACCESS_KEY_ID: local
+      AWS_SECRET_ACCESS_KEY: local
+      DYNAMO_ENDPOINT: http://dynamodb:8000
+    ports:
+      - "8001:8001"

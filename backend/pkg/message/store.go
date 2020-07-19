@@ -41,13 +41,14 @@ func (s Store) CreateMessage(ctx context.Context, input model.MessageInput) (Mes
 		TableName: aws.String(s.table),
 	})
 	_, err = req.Send(ctx)
-
 	return msg, err
 }
 
 func (s Store) GetMessages(ctx context.Context, limit int64) ([]Message, error) {
 	key := NewKey("")
-	keyCond := expression.Key("pk").Equal(expression.Value(key.PK))
+	keyCond := expression.KeyAnd(
+		expression.Key("pk").Equal(expression.Value(key.PK)),
+		expression.Key("createdAt").LessThanEqual(expression.Value(time.Now().Format(time.RFC3339))))
 	expr, err := expression.NewBuilder().WithKeyCondition(keyCond).Build()
 	if err != nil {
 		return nil, err
@@ -57,8 +58,10 @@ func (s Store) GetMessages(ctx context.Context, limit int64) ([]Message, error) 
 		ExpressionAttributeNames:  expr.Names(),
 		ExpressionAttributeValues: expr.Values(),
 		KeyConditionExpression:    expr.KeyCondition(),
-		TableName:                 aws.String(s.table),
 		Limit:                     aws.Int64(limit),
+		ScanIndexForward:          aws.Bool(false),
+		TableName:                 aws.String(s.table),
+		IndexName:                 aws.String("ByCreatedAt"),
 	})
 
 	out, err := req.Send(ctx)
@@ -74,7 +77,7 @@ func (s Store) GetMessages(ctx context.Context, limit int64) ([]Message, error) 
 
 	messages := make([]Message, len(mItems))
 	for i, mItem := range mItems {
-		messages[i] = mItem.AsMessage()
+		messages[(len(messages)-1)-i] = mItem.AsMessage()
 	}
 
 	return messages, nil
