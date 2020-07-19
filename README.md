@@ -8,8 +8,8 @@ The goal of this workshop is to get you comfortable working with `GraphQL` and `
 
 We will cover:
 
-- `query` operations
-- `mutation` operations
+- `query` operation
+- `mutation` operation
 - `fragments`
 - testing
 - _middlewares_ and _afterwares_ along with authorization aspects.
@@ -22,9 +22,11 @@ You will need a couple of things installed on your local machine:
 - Docker
 - Node.JS
 
+To get the most out of this workshop, you should be comfortable with `Typescript` and `React`. 
+
 ## Validation and setup
 
-To make sure everything is setup and that you are ready for the workshop run:
+To make sure everything is set up and that you are ready for the workshop run:
 
 ```sh
 make validate
@@ -32,12 +34,18 @@ make validate
 
 ## Starting the app
 
-**After validation is successfull** please run:
+**After validation is successful** please run:
 
 ```sh
 make start
 ```
 
-application that we will be working on should will be available on `https://localhost:3000`
+The application is available at `http://localhost:3000`.
 
-Then, you can navigate to the `frontend` folder as we will spend all our time there.
+
+## Playground
+
+Playground is there for you to explore the schema and operations that you can do. Whenever you are lost, not sure how to
+define given operation this is the place where you should look into (apart from asking me 🙂).
+
+The playground is available at `http://localhost:4000/playground`. Before going there, **make sure you started the application**.
