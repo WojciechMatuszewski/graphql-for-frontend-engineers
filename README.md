@@ -22,7 +22,7 @@ You will need a couple of things installed on your local machine:
 - Docker
 - Node.JS
 
-To get the most out of this workshop, you should be comfortable with `Typescript` and `React`. 
+To get the most out of this workshop you should be comfortable with `Typescript` and `React`. 
 
 ## Validation and setup
 
@@ -40,7 +40,7 @@ make validate
 make start
 ```
 
-The application is available at `http://localhost:3000`.
+The application is available at [http://localhost:3000](http://localhost:3000).
 
 
 ## Playground
@@ -48,4 +48,5 @@ The application is available at `http://localhost:3000`.
 Playground is there for you to explore the schema and operations that you can do. Whenever you are lost, not sure how to
 define given operation this is the place where you should look into (apart from asking me 🙂).
 
-The playground is available at `http://localhost:4000/playground`. Before going there, **make sure you started the application**.
+The playground is available at [http://localhost:4000/playground](http://localhost:4000/playground). 
+Before going there, **make sure you started the application**.
