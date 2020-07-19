@@ -6,7 +6,7 @@
   "dependencies": {
     "@apollo/client": "3.0.0",
     "@apollo/link-error": "^2.0.0-beta.3",
-    "@kentcdodds/react-workshop-app": "2.12.0",
+    "@kentcdodds/react-workshop-app": "git+https://github.com/WojciechMatuszewski/react-workshop-app.git",
     "antd": "^4.4.0",
     "graphql": "^15.2.0",
     "react": "^16.13.1",
