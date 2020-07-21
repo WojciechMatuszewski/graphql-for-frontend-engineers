@@ -62,7 +62,7 @@ function ChatMessagesList({ messages, loading }: ChatMessagesListProps) {
         overflowY: "scroll"
       }}
       renderItem={(message) => (
-        <li>
+        <li data-cy="chat-message">
           <ChatMessage message={message} />
         </li>
       )}

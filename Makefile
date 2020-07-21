@@ -15,12 +15,15 @@ frontend-dependencies:
 frontend-units:
 	cd frontend && npm run test
 
+frontend-integration:
+	cd frontend && npm run cy:run
+
 stop-backend:
 	cd backend && docker-compose down
 
 post-validate:
 	@echo "Everything looks good. You are ready to start the workshop."
 
-validate: build-backend start-backend frontend-dependencies frontend-units stop-backend post-validate
+validate: build-backend start-backend frontend-dependencies frontend-units frontend-integration stop-backend post-validate
 
 start: start-backend start-frontend
