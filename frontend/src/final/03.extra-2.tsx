@@ -3,7 +3,7 @@ import React from "react";
 
 import { ApolloClientSimpleProvider } from "../apollo/Provider";
 import { gql, useMutation, useQuery } from "@apollo/client";
-import { UserProfile } from "../ui/User";
+import { User, UserProfile } from "../ui/User";
 
 const EXERCISE3_EXTRA2_USER_FRAGMENT = gql`
   fragment Exercise3Extra2Fragment on User {
@@ -33,15 +33,18 @@ export const EXERCISE3_EXTRA2_USER_MUTATION = gql`
 `;
 
 function App() {
-  const { loading, data } = useQuery(EXERCISE3_EXTRA2_USER_QUERY);
-  const [mutate, { loading: onEditLoading }] = useMutation(
+  const { loading, data, error: loadingError } = useQuery<{ user: User }>(
+    EXERCISE3_EXTRA2_USER_QUERY
+  );
+  const [mutate, { loading: onEditLoading }] = useMutation<{ input: User }>(
     EXERCISE3_EXTRA2_USER_MUTATION
   );
 
-  async function handleOnEdit(user: any) {
+  async function handleOnEdit(user: User) {
     await mutate({ variables: { input: user } });
   }
 
+  if (loadingError) return <p>Error</p>;
   if (loading || !data) return null;
 
   return (

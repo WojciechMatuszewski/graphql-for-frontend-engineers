@@ -17,11 +17,12 @@ export const EXERCISE2_EXTRA_1_MESSAGES_QUERY = gql`
 `;
 
 function App() {
-  const { loading, data } = useQuery(EXERCISE2_EXTRA_1_MESSAGES_QUERY);
+  const { loading, data, error } = useQuery(EXERCISE2_EXTRA_1_MESSAGES_QUERY);
 
-  const messages = data?.messages || [];
+  if (error) return <p>error</p>;
+  if (loading || !data) return <p>Loading..</p>;
 
-  return <ChatMessagesList messages={messages} loading={loading} />;
+  return <ChatMessagesList messages={data.messages} />;
 }
 
 // Do not change the usage.

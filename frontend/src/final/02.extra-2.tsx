@@ -2,7 +2,7 @@ import React from "react";
 // 💯 Query with parameter.
 
 import { ApolloClientSimpleProvider } from "../apollo/Provider";
-import { ChatMessagesList } from "../ui/Chat";
+import { ChatMessagesList, Message } from "../ui/Chat";
 import { gql, useQuery } from "@apollo/client";
 
 export const EXERCISE2_EXTRA_2_MESSAGES_QUERY = gql`
@@ -20,13 +20,17 @@ type Props = {
 };
 
 function App({ limit = 1 }: Props) {
-  const { loading, data } = useQuery(EXERCISE2_EXTRA_2_MESSAGES_QUERY, {
-    variables: { limit }
-  });
+  const { loading, data, error } = useQuery<{ messages: Message[] }>(
+    EXERCISE2_EXTRA_2_MESSAGES_QUERY,
+    {
+      variables: { limit }
+    }
+  );
 
-  const messages = data?.messages || [];
+  if (error) return <p>error</p>;
+  if (loading || !data) return <p>Loading..</p>;
 
-  return <ChatMessagesList messages={messages} loading={loading} />;
+  return <ChatMessagesList messages={data.messages} loading={loading} />;
 }
 
 // Do not change the usage.

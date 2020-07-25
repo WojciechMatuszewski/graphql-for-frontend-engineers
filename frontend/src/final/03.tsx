@@ -29,18 +29,16 @@ function App() {
   const { loading, data, error: loadingError } = useQuery<{
     user: User;
   }>(EXERCISE3_FINAL_USER_QUERY);
-  const [
-    mutate,
-    { loading: onEditLoading, error: updatingError }
-  ] = useMutation(EXERCISE3_FINAL_USER_MUTATION);
+  const [mutate, { loading: onEditLoading }] = useMutation<{ input: User }>(
+    EXERCISE3_FINAL_USER_MUTATION
+  );
 
-  async function handleOnEdit(user: any) {
+  async function handleOnEdit(user: User) {
     await mutate({ variables: { input: user } });
   }
 
+  if (loadingError) return <p>Error</p>;
   if (loading || !data) return null;
-
-  if (loadingError || updatingError) return <p>Error</p>;
 
   return (
     <UserProfile

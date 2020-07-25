@@ -8,7 +8,7 @@ const QueryMockedResponse: MockedResponse = {
   request: {
     query: EXERCISE2_EXTRA_3_MESSAGES_QUERY,
     variables: {
-      limit: 10
+      limit: 2
     }
   },
   result: {
@@ -25,7 +25,7 @@ describe("02.extra-1 simple test", () => {
   it("fetches and displays the data", async () => {
     render(
       <MockedProvider mocks={[QueryMockedResponse]} addTypename={false}>
-        <App limit={10} />
+        <App limit={2} />
       </MockedProvider>
     );
 
