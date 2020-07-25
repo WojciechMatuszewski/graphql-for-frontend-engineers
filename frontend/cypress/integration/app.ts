@@ -9,7 +9,7 @@ const EXERCISES = [
   "Interacting with cache"
 ];
 
-describe("it works", () => {
+describe("Application works", () => {
   it("first", () => {
     cy.goToExercise(EXERCISES[0]).goToFinal();
 
@@ -72,5 +72,3 @@ describe("it works", () => {
     cy.get('[data-cy="chat-message"]').contains("msg2");
   });
 });
-
-export {};

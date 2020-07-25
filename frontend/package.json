@@ -32,16 +32,21 @@
     "cypress": "^4.11.0",
     "prettier": "^2.0.5",
     "react-scripts": "3.4.1",
+    "serve": "^11.3.2",
+    "start-server-and-test": "^1.11.2",
     "typescript": "^3.7.5",
     "webpack": "4.42.0"
   },
   "scripts": {
     "start": "craco start",
     "build": "craco build",
+    "serve": "serve --no-clipboard --single --listen 8080 build",
     "test": "craco test --watchAll=false",
     "codegen:final": "graphql-codegen --config ./src/final/codegen/codegen.yml",
     "cy:open": "sudo cypress open",
-    "cy:run": "cypress run"
+    "cy:run": "cypress run",
+    "cy:validate": "cypress run --config-file=cypress.validate.json",
+    "cy:test": "start-server-and-test serve http://localhost:8080 cy:validate"
   },
   "eslintConfig": {
     "extends": "react-app",
