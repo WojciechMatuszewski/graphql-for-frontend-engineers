@@ -12,8 +12,8 @@ const QueryMockedResponse: MockedResponse = {
   result: {
     data: {
       messages: [
-        { id: "1", content: "first mock message", createdAt: "" },
-        { id: "2", content: "second mock message", createdAt: "" }
+        { id: "1", content: "first mock message" },
+        { id: "2", content: "second mock message" }
       ]
     }
   }

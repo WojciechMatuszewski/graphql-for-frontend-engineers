@@ -60,6 +60,7 @@ const authAfterwareLink = onError(({ networkError, operation, forward }) => {
 
   return fromPromise(fetchToken()).flatMap(({ token }) => {
     setToken(token);
+
     const prevHeaders = operation.getContext().headers || {};
     operation.setContext({
       headers: {

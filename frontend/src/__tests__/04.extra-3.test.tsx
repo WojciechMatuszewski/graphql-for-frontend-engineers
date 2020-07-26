@@ -1,4 +1,10 @@
-import { gql, ApolloLink, execute, Observable } from "@apollo/client";
+import {
+  gql,
+  ApolloLink,
+  execute,
+  Observable,
+  Operation
+} from "@apollo/client";
 import { wait } from "@testing-library/react";
 import { createAuthAfterwareLink } from "../final/04.extra-3";
 
@@ -18,16 +24,17 @@ function createLinkThatThrows(
   statusCode: number,
   headersGetterFn: (headers: Record<string, string>) => void = () => {}
 ) {
-  let called = 0;
-  return new ApolloLink((operation) => {
-    headersGetterFn(operation.getContext().headers);
-    if (called == 1) return Observable.of();
-    called++;
-
-    return new Observable((observer) => {
-      observer.error({ statusCode });
+  const operationFN = jest
+    .fn<any, [Operation]>()
+    .mockImplementationOnce(() => {
+      return new Observable((observer) => observer.error({ statusCode }));
+    })
+    .mockImplementationOnce((operation) => {
+      headersGetterFn(operation.getContext().headers);
+      return Observable.of();
     });
-  });
+
+  return new ApolloLink(operationFN);
 }
 
 describe("04.extra-3 tests", () => {

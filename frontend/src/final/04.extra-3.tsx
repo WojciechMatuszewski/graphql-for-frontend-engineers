@@ -55,7 +55,7 @@ async function fetchToken() {
 // Notice the dependency injection
 type TokenFetcher = () => Promise<{ token: string }>;
 function createAuthAfterwareLink(tokenFetcher: TokenFetcher) {
-  return onError(({ networkError, operation, forward, graphQLErrors }) => {
+  return onError(({ networkError, operation, forward }) => {
     if (!networkError) return forward(operation);
 
     if (!isServerError(networkError)) return forward(operation);

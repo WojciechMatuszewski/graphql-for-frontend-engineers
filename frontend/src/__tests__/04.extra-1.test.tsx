@@ -27,7 +27,7 @@ describe("04.extra-1 test", () => {
     });
 
     // this is the terminating link which is used for assertions
-    const afterLink = new ApolloLink((operation, forward) => {
+    const afterLink = new ApolloLink((operation) => {
       expect(operation.getContext().headers).toEqual({
         ...prevHeaders,
         Authorization: getMockAuthorizationToken()
