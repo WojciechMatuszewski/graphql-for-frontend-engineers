@@ -19,7 +19,7 @@ type Props = {
   limit?: number;
 };
 
-function App({ limit = 1 }: Props) {
+function App({ limit }: Props) {
   const { loading, data, error } = useQuery<{ messages: Message[] }>(
     EXERCISE2_EXTRA_2_MESSAGES_QUERY,
     {

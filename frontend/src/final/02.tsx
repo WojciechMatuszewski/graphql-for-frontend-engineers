@@ -8,7 +8,6 @@ const EXERCISE2_MESSAGES_QUERY = gql`
     messages {
       id
       content
-      createdAt
     }
   }
 `;

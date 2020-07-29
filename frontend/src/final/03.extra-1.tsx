@@ -41,7 +41,7 @@ function App() {
   }
 
   if (loadingError) return <p>Error</p>;
-  if (loading || !data) return null;
+  if (loading || !data) return <p>loading...</p>;
 
   return (
     <UserProfile

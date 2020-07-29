@@ -6,11 +6,10 @@ import { ChatMessagesList, Message } from "../ui/Chat";
 import { gql, useQuery } from "@apollo/client";
 
 export const EXERCISE2_EXTRA_3_MESSAGES_QUERY = gql`
-  query Exercise2Extra3Messages($limit: Int!) {
+  query Exercise2Extra3Messages($limit: Int) {
     messages(limit: $limit) {
       id
       content
-      createdAt
     }
   }
 `;
@@ -19,7 +18,7 @@ type Props = {
   limit?: number;
 };
 
-function App({ limit = 1 }: Props) {
+function App({ limit }: Props) {
   const { loading, data, error } = useQuery<{ messages: Message[] }>(
     EXERCISE2_EXTRA_3_MESSAGES_QUERY,
     {
@@ -27,9 +26,8 @@ function App({ limit = 1 }: Props) {
     }
   );
 
-  if (loading || !data) return <p>Loading..</p>;
-
   if (error) return <p>error</p>;
+  if (loading || !data?.messages) return <p>Loading..</p>;
 
   return <ChatMessagesList messages={data.messages} loading={loading} />;
 }

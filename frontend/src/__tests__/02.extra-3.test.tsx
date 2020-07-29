@@ -1,8 +1,7 @@
 import React from "react";
-import { MockedResponse } from "@apollo/client/testing";
 import { App, EXERCISE2_EXTRA_3_MESSAGES_QUERY } from "../final/02.extra-3";
 import { render, screen, wait } from "@testing-library/react";
-import { MockedProvider } from "@apollo/client/testing";
+import { MockedProvider, MockedResponse } from "@apollo/client/testing";
 
 const QueryMockedResponse: MockedResponse = {
   request: {

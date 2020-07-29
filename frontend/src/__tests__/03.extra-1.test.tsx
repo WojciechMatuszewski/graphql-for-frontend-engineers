@@ -18,13 +18,14 @@ const MOCKED_QUERY_RESPONSE: MockedResponse = {
       user: {
         __typename: "User",
         id: "1",
-        firstName: "Wojtek",
+        firstName: "Wojciech",
         lastName: "Matuszewski",
         hobbies: ["writing code"]
       }
     }
   }
 };
+
 const MOCKED_MUTATION_RESPONSE: MockedResponse = {
   request: {
     query: EXERCISE3_EXTRA1_USER_MUTATION,
