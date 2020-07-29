@@ -1,6 +1,5 @@
-import { InMemoryCache } from "@apollo/client";
 import { MockedProvider, MockedResponse } from "@apollo/client/testing";
-import { render, screen } from "@testing-library/react";
+import { render, screen, wait } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import React from "react";
 import {
@@ -52,27 +51,24 @@ const MOCKED_MUTATION_RESPONSE: MockedResponse = {
 
 describe("03.extra-1 test", () => {
   it("enables user to change the user information", async () => {
-    const cache = new InMemoryCache();
-
     render(
-      <MockedProvider
-        cache={cache}
-        mocks={[MOCKED_QUERY_RESPONSE, MOCKED_MUTATION_RESPONSE]}
-      >
+      <MockedProvider mocks={[MOCKED_QUERY_RESPONSE, MOCKED_MUTATION_RESPONSE]}>
         <App />
       </MockedProvider>
     );
 
-    expect(await screen.findByText(/wojtek/i)).toBeInTheDocument();
-    userEvent.click(screen.getByRole("button", { name: /edit/i }));
+    expect(screen.getByText(/loading/i)).toBeInTheDocument();
+    await wait(() => expect(screen.getByText(/wojciech/i)).toBeInTheDocument());
 
-    userEvent.type(
-      screen.getByRole("textbox", { name: /first name/i }),
-      "Mateusz"
-    );
+    userEvent.click(screen.getByText(/edit/i));
 
+    userEvent.type(screen.getByLabelText(/first name/i), "Mateusz");
     userEvent.click(screen.getByRole("button", { name: /submit/i }));
 
-    expect(await screen.findByText(/mateusz/i)).toBeInTheDocument();
+    await wait(() =>
+      expect(screen.queryByTestId("userProfileForm")).not.toBeInTheDocument()
+    );
+
+    expect(screen.getByText(/mateusz/i)).toBeInTheDocument();
   });
 });

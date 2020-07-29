@@ -110,6 +110,7 @@ function UserProfileForm({
 }: UserProfileFormProps) {
   return (
     <Form
+      data-testid="userProfileForm"
       name="userProfileForm"
       initialValues={{ ...initialValues }}
       onFinish={(values) => onSubmit(values as User)}
