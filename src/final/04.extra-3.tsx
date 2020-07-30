@@ -59,7 +59,7 @@ function createAuthAfterwareLink(tokenFetcher: TokenFetcher) {
     if (!networkError) return forward(operation);
 
     if (!isServerError(networkError)) return forward(operation);
-    if (networkError.statusCode != 403) return forward(operation);
+    if (networkError.statusCode != 401) return forward(operation);
 
     return fromPromise(Promise.resolve(tokenFetcher())).flatMap(({ token }) => {
       setToken(token);

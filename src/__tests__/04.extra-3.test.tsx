@@ -38,14 +38,14 @@ function createLinkThatThrows(
 }
 
 describe("04.extra-3 tests", () => {
-  it("fetches new token when backend returns 403", async () => {
+  it("fetches new token when backend returns 401", async () => {
     const fetcher = jest.fn().mockResolvedValue({ token: "token" });
 
     const authLink = createAuthAfterwareLink(fetcher);
 
     let currentHeaders = {};
     const errorLink = createLinkThatThrows(
-      403,
+      401,
       async (headers) => (currentHeaders = headers)
     );
 
@@ -58,7 +58,7 @@ describe("04.extra-3 tests", () => {
     await wait(() => expect(fetcher).toHaveBeenCalled());
   });
 
-  it("does not fetch the token then the statusCode is not 403", async () => {
+  it("does not fetch the token then the statusCode is not 401", async () => {
     const fetcher = jest.fn().mockResolvedValue({ token: "token" });
 
     const authLink = createAuthAfterwareLink(fetcher);

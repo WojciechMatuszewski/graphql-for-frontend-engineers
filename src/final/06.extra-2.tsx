@@ -1,4 +1,4 @@
-import { gql, useApolloClient } from "@apollo/client";
+import { gql } from "@apollo/client";
 // 💯 Using the `update` property.
 import React from "react";
 import { ApolloClientSimpleProvider } from "../apollo/Provider";
