@@ -48,7 +48,7 @@ const ERROR_MUTATION_MOCK: MockedResponse = {
   }
 };
 
-describe("06.extra-1 tests", () => {
+describe("05.extra-1 tests", () => {
   it("happy path", async () => {
     render(
       <MockedProvider

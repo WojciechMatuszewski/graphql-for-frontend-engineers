@@ -14,7 +14,7 @@ function makeRequest(link: ApolloLink) {
   }).subscribe(() => {});
 }
 
-describe("04.extra-1 test", () => {
+describe("06.extra-1 test", () => {
   it("sets the `Authorization` header while preserving previous headers", () => {
     // this link just sets headers so that we can test that our link preserves them
     const prevHeaders = {

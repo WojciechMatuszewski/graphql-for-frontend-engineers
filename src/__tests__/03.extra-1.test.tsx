@@ -63,7 +63,7 @@ describe("03.extra-1 test", () => {
 
     userEvent.click(screen.getByText(/edit/i));
 
-    userEvent.type(screen.getByLabelText(/first name/i), "Mateusz");
+    await userEvent.type(screen.getByLabelText(/first name/i), "Mateusz");
     userEvent.click(screen.getByRole("button", { name: /submit/i }));
 
     await wait(() =>

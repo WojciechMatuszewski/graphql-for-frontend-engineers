@@ -37,7 +37,7 @@ function createLinkThatThrows(
   return new ApolloLink(operationFN);
 }
 
-describe("04.extra-3 tests", () => {
+describe("06.extra-3 tests", () => {
   it("fetches new token when backend returns 401", async () => {
     const fetcher = jest.fn().mockResolvedValue({ token: "token" });
 
