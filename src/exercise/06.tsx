@@ -1,49 +1,74 @@
 import React from "react";
-import { ApolloClientSimpleProvider } from "../apollo/Provider";
-/*
- * You will be using `Chat` component in this exercise
- * import { Chat } from "../ui/Chat";
- *
- * You will also need apolloClient for cache updates.
- * import { gql, useApolloClient } from "@apollo/client";
- * */
+import { gql, useQuery, useMutation } from "@apollo/client";
+import { User, UserProfile } from "../ui/User";
 
-// define your query and mutation operations here
+// you will need to get the static token from this method
+// import { getMockAuthorizationToken } from "../apollo/Provider";
 
-/*
- * const EXERCISE6_MESSAGES_QUERY =
- *
- * const EXERCISE6_MESSAGE_MUTATION =
- * */
+// create `httpLink` here.
+
+// You can create custom middleware links using the `ApolloLink` class.
+// import { ApolloLink } from "@apollo/client"
+// const myMiddlewareLink = new ApolloLink()
 
 function App() {
-  /*
-   * Import generated hooks so that you can perform the mutation and also pull in the messages.
-   *
-   * Get the `apolloClient` using the `useApolloClient` hook.
-   * */
-
-  /*
-   * Define `handleOnMessage` function so that you can react when you post a message.
-   * This function has to be async since inside it we will be performing mutations.
-   *
-   * async function handleOnMessage(message: string) {
-   *
-   * Perform the mutation here.
-   *
-   * Read and Write EXERCISE6_MESSAGES_QUERY using the `apolloClient`. Update the cache.
-   * }
-   * */
-
+  // use `ApolloProvider` and pass the client
+  // wrap the `UserProfileStuff` with the `ApolloProvider`
   return null;
 }
 
-function Usage() {
+// ------ implementation details \/ ----- /
+const EXERCISE6_USER_QUERY = gql`
+  query Exercise6User {
+    user {
+      id
+      firstName
+      hobbies
+      lastName
+    }
+  }
+`;
+
+const EXERCISE6_USER_MUTATION = gql`
+  mutation Exercise6FinalUser($input: UpdateUserInput!) {
+    updateUser(input: $input) {
+      firstName
+      lastName
+      id
+      hobbies
+    }
+  }
+`;
+// eslint-disable-next-line
+function UserProfileStuff() {
+  const { data, loading: queryLoading, error: queryError } = useQuery<{
+    user: User;
+  }>(EXERCISE6_USER_QUERY);
+
+  const [
+    mutate,
+    { loading: onEditLoading, error: updatingError }
+  ] = useMutation(EXERCISE6_USER_MUTATION);
+
+  async function handleOnEdit(user: any) {
+    await mutate({ variables: { input: user } });
+  }
+
+  if (queryError || updatingError) return <p> error ...</p>;
+
+  if (queryLoading || !data) return <p>loading...</p>;
+
   return (
-    <ApolloClientSimpleProvider>
-      <App />
-    </ApolloClientSimpleProvider>
+    <UserProfile
+      user={data.user}
+      onEditLoading={onEditLoading}
+      onEdit={handleOnEdit}
+    />
   );
+}
+
+function Usage() {
+  return <App />;
 }
 
 export default Usage;

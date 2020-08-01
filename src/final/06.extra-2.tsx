@@ -1,78 +1,144 @@
-import { gql } from "@apollo/client";
-// 💯 Using the `update` property.
 import React from "react";
-import { ApolloClientSimpleProvider } from "../apollo/Provider";
-import { Chat } from "../ui/Chat";
+// 💯 Afterware which fetches the link
+import { getBackendGraphQLURI, getBackendTokenURI } from "../apollo/Provider";
 import {
-  useExercise6Extra2MessageMutation,
-  useExercise6Extra2MessagesQuery
-} from "./codegen/generated";
+  ApolloClient,
+  ApolloLink,
+  ApolloProvider,
+  fromPromise,
+  gql,
+  HttpLink,
+  InMemoryCache,
+  ServerError,
+  useMutation,
+  useQuery
+} from "@apollo/client";
+import { User, UserProfile } from "../ui/User";
+import { ErrorResponse, onError } from "@apollo/link-error";
 
-const EXERCISE6_EXTRA2_MESSAGES_QUERY = gql`
-  query Exercise6Extra2Messages {
-    messages(limit: 10) {
-      content
-      id
-    }
-  }
-`;
+function getToken() {
+  return localStorage.getItem("token");
+}
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const EXERCISE6_EXTRA2_MESSAGE_MUTATION = gql`
-  mutation Exercise6Extra2Message($input: MessageInput!) {
-    message(input: $input) {
-      content
-      id
+function setToken(token: string) {
+  localStorage.setItem("token", token);
+}
+
+const httpLink = new HttpLink({
+  uri: getBackendGraphQLURI()
+});
+
+const authMiddlewareLink = new ApolloLink((operation, forward) => {
+  const prevHeaders = operation.getContext().headers || {};
+  operation.setContext({
+    headers: {
+      ...prevHeaders,
+      Authorization: getToken()
     }
-  }
-`;
+  });
+
+  return forward(operation);
+});
+
+function isServerError(e: ErrorResponse["networkError"]): e is ServerError {
+  return (e as any).statusCode != null;
+}
+
+async function fetchToken() {
+  const resp = await fetch(getBackendTokenURI());
+  if (!resp.ok) throw new Error("response not ok");
+
+  return await resp.json();
+}
+
+const authAfterwareLink = onError(({ networkError, operation, forward }) => {
+  if (!networkError) return forward(operation);
+
+  if (!isServerError(networkError)) return forward(operation);
+  if (networkError.statusCode != 401) return forward(operation);
+
+  return fromPromise(fetchToken()).flatMap(({ token }) => {
+    setToken(token);
+
+    const prevHeaders = operation.getContext().headers || {};
+    operation.setContext({
+      headers: {
+        ...prevHeaders,
+        Authorization: token
+      }
+    });
+    return forward(operation);
+  });
+});
+
+const cache = new InMemoryCache();
+const combinedLinks = ApolloLink.from([
+  authMiddlewareLink,
+  authAfterwareLink,
+  httpLink
+]);
+const client = new ApolloClient({ cache, link: combinedLinks });
 
 function App() {
-  const {
-    data: messagesData,
-    loading: loadingMessages,
-    error: messagesError
-  } = useExercise6Extra2MessagesQuery();
+  return (
+    <ApolloProvider client={client}>
+      <UserProfileStuff />
+    </ApolloProvider>
+  );
+}
+
+// ------ implementation details \/ ----- /
+const EXERCISE6_FINAL_USER_QUERY = gql`
+  query Exercise6User {
+    user {
+      id
+      firstName
+      hobbies
+      lastName
+    }
+  }
+`;
+
+const EXERCISE6_FINAL_USER_MUTATION = gql`
+  mutation Exercise6FinalUser($input: UpdateUserInput!) {
+    updateUser(input: $input) {
+      firstName
+      lastName
+      id
+      hobbies
+    }
+  }
+`;
+
+function UserProfileStuff() {
+  const { data, loading: queryLoading, error: queryError } = useQuery<{
+    user: User;
+  }>(EXERCISE6_FINAL_USER_QUERY);
 
   const [
-    saveMessage,
-    { loading: addingMessage, error: addingMessageError }
-  ] = useExercise6Extra2MessageMutation();
+    mutate,
+    { loading: onEditLoading, error: updatingError }
+  ] = useMutation(EXERCISE6_FINAL_USER_MUTATION);
 
-  async function handleOnMessage(message: string) {
-    try {
-      await saveMessage({
-        variables: { input: { content: message } },
-        refetchQueries: [
-          { query: EXERCISE6_EXTRA2_MESSAGES_QUERY, variables: { limit: 10 } }
-        ],
-        // mutation is not considered done until the query itself is refetched.
-        awaitRefetchQueries: true
-      });
-    } catch {}
+  async function handleOnEdit(user: any) {
+    await mutate({ variables: { input: user } });
   }
 
-  if (messagesError) return <p>error...</p>;
+  if (queryError || updatingError) return <p> error ...</p>;
 
-  if (addingMessageError) return <p>could not send, refresh the page!</p>;
-
-  if (loadingMessages || !messagesData) return <p>loading ...</p>;
+  if (queryLoading || !data) return <p>loading...</p>;
 
   return (
-    <Chat
-      messages={messagesData.messages}
-      loading={addingMessage}
-      onMessage={handleOnMessage}
+    <UserProfile
+      user={data.user}
+      onEditLoading={onEditLoading}
+      onEdit={handleOnEdit}
     />
   );
 }
 
 function Usage() {
-  return (
-    <ApolloClientSimpleProvider>
-      <App />
-    </ApolloClientSimpleProvider>
-  );
+  return <App />;
 }
 
 export default Usage;

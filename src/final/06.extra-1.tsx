@@ -1,97 +1,102 @@
-import { gql, useApolloClient } from "@apollo/client";
-// 💯 Tests for the happy and sad path.
 import React from "react";
-import { ApolloClientSimpleProvider } from "../apollo/Provider";
-import { Chat } from "../ui/Chat";
+// 💯 Tests for the link
 import {
-  Exercise6Extra1MessageMutation,
-  Exercise6Extra1MessagesQuery,
-  useExercise6Extra1MessageMutation,
-  useExercise6Extra1MessagesQuery
-} from "./codegen/generated";
+  getBackendGraphQLURI,
+  getMockAuthorizationToken
+} from "../apollo/Provider";
+import {
+  HttpLink,
+  ApolloClient,
+  InMemoryCache,
+  gql,
+  useQuery,
+  useMutation,
+  ApolloLink,
+  ApolloProvider
+} from "@apollo/client";
+import { UserProfile, User } from "../ui/User";
 
-// This query definition is used within tests.
-export const EXERCISE6_EXTRA1_MESSAGES_QUERY = gql`
-  query Exercise6Extra1Messages {
-    messages(limit: 10) {
-      content
-      id
-    }
-  }
-`;
+const httpLink = new HttpLink({
+  uri: getBackendGraphQLURI()
+});
 
-// This mutation definition is used within the tests.
-export const EXERCISE6_EXTRA1_MESSAGE_MUTATION = gql`
-  mutation Exercise6Extra1Message($input: MessageInput!) {
-    message(input: $input) {
-      content
-      id
+// our newly created link is now exported.
+export const authMiddlewareLink = new ApolloLink((operation, forward) => {
+  const prevHeaders = operation.getContext().headers || {};
+  operation.setContext({
+    headers: {
+      ...prevHeaders,
+      Authorization: getMockAuthorizationToken()
     }
-  }
-`;
+  });
+
+  return forward(operation);
+});
+
+const cache = new InMemoryCache();
+const combinedLinks = ApolloLink.from([authMiddlewareLink, httpLink]);
+const client = new ApolloClient({ cache, link: combinedLinks });
 
 function App() {
-  const apolloClient = useApolloClient();
+  return (
+    <ApolloProvider client={client}>
+      <UserProfileStuff />
+    </ApolloProvider>
+  );
+}
 
-  const {
-    data: messagesData,
-    loading: loadingMessages,
-    error: messagesError
-  } = useExercise6Extra1MessagesQuery();
+// ------ implementation details \/ ----- /
+const EXERCISE6_FINAL_USER_QUERY = gql`
+  query Exercise6User {
+    user {
+      id
+      firstName
+      hobbies
+      lastName
+    }
+  }
+`;
+
+const EXERCISE6_FINAL_USER_MUTATION = gql`
+  mutation Exercise6FinalUser($input: UpdateUserInput!) {
+    updateUser(input: $input) {
+      firstName
+      lastName
+      id
+      hobbies
+    }
+  }
+`;
+
+function UserProfileStuff() {
+  const { data, loading: queryLoading, error: queryError } = useQuery<{
+    user: User;
+  }>(EXERCISE6_FINAL_USER_QUERY);
 
   const [
-    saveMessage,
-    { loading: addingMessage, error: addingMessageError }
-  ] = useExercise6Extra1MessageMutation();
+    mutate,
+    { loading: onEditLoading, error: updatingError }
+  ] = useMutation(EXERCISE6_FINAL_USER_MUTATION);
 
-  async function handleOnMessage(message: string) {
-    try {
-      const mutationResult = await saveMessage({
-        variables: { input: { content: message } }
-      });
-
-      if (!mutationResult || !mutationResult.data) return;
-      updateCache(mutationResult.data);
-    } catch {}
+  async function handleOnEdit(user: any) {
+    await mutate({ variables: { input: user } });
   }
 
-  function updateCache(mutationPayload: Exercise6Extra1MessageMutation) {
-    const dataFromCache = apolloClient.readQuery<Exercise6Extra1MessagesQuery>({
-      query: EXERCISE6_EXTRA1_MESSAGES_QUERY
-    });
+  if (queryError || updatingError) return <p> error ...</p>;
 
-    if (!dataFromCache) return;
-
-    apolloClient.writeQuery<Exercise6Extra1MessagesQuery>({
-      query: EXERCISE6_EXTRA1_MESSAGES_QUERY,
-      data: {
-        messages: [...dataFromCache.messages, mutationPayload.message]
-      }
-    });
-  }
-
-  if (messagesError) return <p>error...</p>;
-
-  if (addingMessageError) return <p>could not send, refresh the page!</p>;
-
-  if (loadingMessages || !messagesData) return <p>loading ...</p>;
+  if (queryLoading || !data) return <p>loading...</p>;
 
   return (
-    <Chat
-      messages={messagesData.messages}
-      loading={addingMessage}
-      onMessage={handleOnMessage}
+    <UserProfile
+      user={data.user}
+      onEditLoading={onEditLoading}
+      onEdit={handleOnEdit}
     />
   );
 }
 
 function Usage() {
-  return (
-    <ApolloClientSimpleProvider>
-      <App />
-    </ApolloClientSimpleProvider>
-  );
+  return <App />;
 }
 
-export { App };
 export default Usage;

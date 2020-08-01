@@ -1,100 +1,36 @@
 import React from "react";
-import {
-  getBackendGraphQLURI,
-  getMockAuthorizationToken
-} from "../apollo/Provider";
-import {
-  InMemoryCache,
-  gql,
-  useMutation,
-  ApolloLink,
-  useQuery,
-  ApolloProvider,
-  HttpLink,
-  ApolloClient
-} from "@apollo/client";
-import { UserProfile, User } from "../ui/User";
+import { ApolloClientSimpleProvider } from "../apollo/Provider";
+import { gql } from "@apollo/client";
+import { useExercise4FinalMessagesQuery } from "./codegen/generated";
+import { ChatMessagesList } from "../ui/Chat";
 
-const httpLink = new HttpLink({
-  uri: getBackendGraphQLURI()
-});
-
-const authMiddlewareLink = new ApolloLink((operation, forward) => {
-  const prevHeaders = operation.getContext().headers || {};
-  operation.setContext({
-    headers: {
-      ...prevHeaders,
-      Authorization: getMockAuthorizationToken()
+// eslint-disable-next-line
+const EXERCISE4_FINAL_MESSAGES_QUERY = gql`
+  query Exercise4FinalMessages {
+    messages {
+      id
+      content
+      createdAt
     }
-  });
-
-  return forward(operation);
-});
-
-const cache = new InMemoryCache();
-const combinedLinks = ApolloLink.from([authMiddlewareLink, httpLink]);
-const client = new ApolloClient({ cache, link: combinedLinks });
+  }
+`;
 
 function App() {
-  return (
-    <ApolloProvider client={client}>
-      <UserProfileStuff />
-    </ApolloProvider>
-  );
-}
+  const { data, loading, error } = useExercise4FinalMessagesQuery();
 
-// ------ implementation details \/ ----- /
-const EXERCISE4_FINAL_USER_QUERY = gql`
-  query Exercise4User {
-    user {
-      id
-      firstName
-      hobbies
-      lastName
-    }
-  }
-`;
+  if (error) return <p>error...</p>;
 
-const EXERCISE4_FINAL_USER_MUTATION = gql`
-  mutation Exercise3FinalUser($input: UpdateUserInput!) {
-    updateUser(input: $input) {
-      firstName
-      lastName
-      id
-      hobbies
-    }
-  }
-`;
+  if (loading || !data || !data.messages) return <p>loading ...</p>;
 
-function UserProfileStuff() {
-  const { data, loading: queryLoading, error: queryError } = useQuery<{
-    user: User;
-  }>(EXERCISE4_FINAL_USER_QUERY);
-
-  const [
-    mutate,
-    { loading: onEditLoading, error: updatingError }
-  ] = useMutation(EXERCISE4_FINAL_USER_MUTATION);
-
-  async function handleOnEdit(user: any) {
-    await mutate({ variables: { input: user } });
-  }
-
-  if (queryError || updatingError) return <p> error ...</p>;
-
-  if (queryLoading || !data) return <p>loading...</p>;
-
-  return (
-    <UserProfile
-      user={data.user}
-      onEditLoading={onEditLoading}
-      onEdit={handleOnEdit}
-    />
-  );
+  return <ChatMessagesList messages={data.messages} loading={loading} />;
 }
 
 function Usage() {
-  return <App />;
+  return (
+    <ApolloClientSimpleProvider>
+      <App />
+    </ApolloClientSimpleProvider>
+  );
 }
 
 export default Usage;

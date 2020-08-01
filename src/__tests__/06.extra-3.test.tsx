@@ -6,7 +6,7 @@ import {
   Operation
 } from "@apollo/client";
 import { wait } from "@testing-library/react";
-import { createAuthAfterwareLink } from "../final/04.extra-3";
+import { createAuthAfterwareLink } from "../final/06.extra-3";
 
 const mockQuery = gql`
   query {

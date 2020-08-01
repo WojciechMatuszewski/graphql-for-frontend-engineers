@@ -1,93 +1,48 @@
-import React from "react";
-import { App } from "../final/06.extra-1";
-import userEvent from "@testing-library/user-event";
-import { render, screen, wait } from "@testing-library/react";
-import { MockedProvider, MockedResponse } from "@apollo/client/testing";
-import {
-  EXERCISE6_EXTRA1_MESSAGE_MUTATION,
-  EXERCISE6_EXTRA1_MESSAGES_QUERY
-} from "../final/06.extra-1";
-import { GraphQLError } from "graphql";
+import { execute, gql, ApolloLink, Observable } from "@apollo/client";
+import { getMockAuthorizationToken } from "../apollo/Provider";
+import { authMiddlewareLink } from "../final/06.extra-1";
 
-const MESSAGES_QUERY_MOCK: MockedResponse = {
-  request: {
-    query: EXERCISE6_EXTRA1_MESSAGES_QUERY
-  },
-  result: {
-    data: {
-      messages: [
-        { id: "1", content: "Message1" },
-        { id: "2", content: "Message2" }
-      ]
-    }
+const mockQuery = gql`
+  query {
+    foo
   }
-};
+`;
 
-const TEST_MESSAGE = "test message";
-const SUCCESSFUL_MUTATION_MOCK: MockedResponse = {
-  request: {
-    query: EXERCISE6_EXTRA1_MESSAGE_MUTATION,
-    variables: { input: { content: TEST_MESSAGE } }
-  },
-  result: {
-    data: {
-      message: {
-        id: "3",
-        content: TEST_MESSAGE
-      }
-    }
-  }
-};
+function makeRequest(link: ApolloLink) {
+  execute(link, {
+    query: mockQuery
+  }).subscribe(() => {});
+}
 
-const ERROR_MUTATION_MOCK: MockedResponse = {
-  request: {
-    query: EXERCISE6_EXTRA1_MESSAGE_MUTATION
-  },
-  result: {
-    errors: [new GraphQLError("boom")]
-  }
-};
+describe("04.extra-1 test", () => {
+  it("sets the `Authorization` header while preserving previous headers", () => {
+    // this link just sets headers so that we can test that our link preserves them
+    const prevHeaders = {
+      "X-User": "premium",
+      "X-Department": "technology"
+    };
+    const prevLink = new ApolloLink((operation, forward) => {
+      operation.setContext({ headers: prevHeaders });
+      return forward(operation);
+    });
 
-describe("06.extra-1 tests", () => {
-  it("happy path", async () => {
-    render(
-      <MockedProvider
-        mocks={[MESSAGES_QUERY_MOCK, SUCCESSFUL_MUTATION_MOCK]}
-        addTypename={false}
-      >
-        <App />
-      </MockedProvider>
-    );
+    // this is the terminating link which is used for assertions
+    const afterLink = new ApolloLink((operation) => {
+      expect(operation.getContext().headers).toEqual({
+        ...prevHeaders,
+        Authorization: getMockAuthorizationToken()
+      });
 
-    await wait(() => expect(screen.getByText(/message1/i)).toBeInTheDocument());
-    expect(screen.getByText(/message2/i)).toBeInTheDocument();
+      // the operation is not defined since it's the last link in the chain
+      return Observable.of();
+    });
 
-    await userEvent.type(screen.getByRole("textbox"), `${TEST_MESSAGE}`);
-    userEvent.click(screen.getByRole("button", { name: /submit/i }));
+    const combinedLink = ApolloLink.from([
+      prevLink,
+      authMiddlewareLink,
+      afterLink
+    ]);
 
-    await wait(() =>
-      expect(screen.getByText(TEST_MESSAGE)).toBeInTheDocument()
-    );
-  });
-
-  it("sad path", async () => {
-    render(
-      <MockedProvider
-        mocks={[MESSAGES_QUERY_MOCK, ERROR_MUTATION_MOCK]}
-        addTypename={false}
-      >
-        <App />
-      </MockedProvider>
-    );
-
-    await wait(() => expect(screen.getByText(/message1/i)).toBeInTheDocument());
-    expect(screen.getByText(/message2/i)).toBeInTheDocument();
-
-    await userEvent.type(screen.getByRole("textbox"), `${TEST_MESSAGE}`);
-    userEvent.click(screen.getByRole("button", { name: /submit/i }));
-
-    await wait(() =>
-      expect(screen.getByText(/could not send/i)).toBeInTheDocument()
-    );
+    makeRequest(combinedLink);
   });
 });

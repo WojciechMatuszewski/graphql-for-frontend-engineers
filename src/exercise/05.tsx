@@ -1,28 +1,41 @@
 import React from "react";
 import { ApolloClientSimpleProvider } from "../apollo/Provider";
-import { gql, useQuery } from "@apollo/client";
-import { ChatMessagesList } from "../ui/Chat";
+/*
+ * You will be using `Chat` component in this exercise
+ * import { Chat } from "../ui/Chat";
+ *
+ * You will also need apolloClient for cache updates.
+ * import { gql, useApolloClient } from "@apollo/client";
+ * */
 
-const EXERCISE5_MESSAGES_QUERY = gql`
-  # query name has a huge impact on the generated operation name.
-  query Exercise5Messages {
-    messages {
-      id
-      content
-      createdAt
-    }
-  }
-`;
+// define your query and mutation operations here
+
+/*
+ * const EXERCISE6_MESSAGES_QUERY =
+ *
+ * const EXERCISE6_MESSAGE_MUTATION =
+ * */
 
 function App() {
-  // replace this `useQuery` with generated one
-  const { data, loading, error } = useQuery(EXERCISE5_MESSAGES_QUERY);
+  /*
+   * Import generated hooks so that you can perform the mutation and also pull in the messages.
+   *
+   * Get the `apolloClient` using the `useApolloClient` hook.
+   * */
 
-  if (error) return <p>Error ...</p>;
+  /*
+   * Define `handleOnMessage` function so that you can react when you post a message.
+   * This function has to be async since inside it we will be performing mutations.
+   *
+   * async function handleOnMessage(message: string) {
+   *
+   * Perform the mutation here.
+   *
+   * Read and Write EXERCISE6_MESSAGES_QUERY using the `apolloClient`. Update the cache.
+   * }
+   * */
 
-  if (loading || !data) return <p>Loading ...</p>;
-
-  return <ChatMessagesList loading={loading} messages={data.messages} />;
+  return null;
 }
 
 function Usage() {

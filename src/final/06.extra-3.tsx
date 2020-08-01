@@ -94,8 +94,8 @@ function App() {
 }
 
 // ------ implementation details \/ ----- /
-const EXERCISE4_FINAL_USER_QUERY = gql`
-  query Exercise4User {
+const EXERCISE6_FINAL_USER_QUERY = gql`
+  query Exercise6User {
     user {
       id
       firstName
@@ -105,8 +105,8 @@ const EXERCISE4_FINAL_USER_QUERY = gql`
   }
 `;
 
-const EXERCISE4_FINAL_USER_MUTATION = gql`
-  mutation Exercise3FinalUser($input: UpdateUserInput!) {
+const EXERCISE6_FINAL_USER_MUTATION = gql`
+  mutation Exercise6FinalUser($input: UpdateUserInput!) {
     updateUser(input: $input) {
       firstName
       lastName
@@ -119,12 +119,12 @@ const EXERCISE4_FINAL_USER_MUTATION = gql`
 function UserProfileStuff() {
   const { data, loading: queryLoading, error: queryError } = useQuery<{
     user: User;
-  }>(EXERCISE4_FINAL_USER_QUERY);
+  }>(EXERCISE6_FINAL_USER_QUERY);
 
   const [
     mutate,
     { loading: onEditLoading, error: updatingError }
-  ] = useMutation(EXERCISE4_FINAL_USER_MUTATION);
+  ] = useMutation(EXERCISE6_FINAL_USER_MUTATION);
 
   async function handleOnEdit(user: any) {
     await mutate({ variables: { input: user } });

@@ -4,10 +4,10 @@ schema:
       headers:
         Authorization: secret
 documents:
+  - ./src/final/04.tsx
   - ./src/final/05.tsx
-  - ./src/final/06.tsx
-  - ./src/final/06.extra-1.tsx
-  - ./src/final/06.extra-2.tsx
+  - ./src/final/05.extra-1.tsx
+  - ./src/final/05.extra-2.tsx
 generates:
   ./src/final/codegen/generated/index.tsx:
     plugins:

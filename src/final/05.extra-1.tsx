@@ -1,16 +1,18 @@
 import { gql, useApolloClient } from "@apollo/client";
+// 💯 Tests for the happy and sad path.
 import React from "react";
 import { ApolloClientSimpleProvider } from "../apollo/Provider";
 import { Chat } from "../ui/Chat";
 import {
-  Exercise6FinalMessageMutation,
-  Exercise6FinalMessagesQuery,
-  useExercise6FinalMessageMutation,
-  useExercise6FinalMessagesQuery
+  Exercise5Extra1MessageMutation,
+  Exercise5Extra1MessagesQuery,
+  useExercise5Extra1MessageMutation,
+  useExercise5Extra1MessagesQuery
 } from "./codegen/generated";
 
-const EXERCISE6_FINAL_MESSAGES_QUERY = gql`
-  query Exercise6FinalMessages {
+// This query definition is used within tests.
+export const EXERCISE5_EXTRA1_MESSAGES_QUERY = gql`
+  query Exercise5Extra1Messages {
     messages(limit: 10) {
       content
       id
@@ -18,9 +20,9 @@ const EXERCISE6_FINAL_MESSAGES_QUERY = gql`
   }
 `;
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const EXERCISE6_FINAL_MESSAGE_MUTATION = gql`
-  mutation Exercise6FinalMessage($input: MessageInput!) {
+// This mutation definition is used within the tests.
+export const EXERCISE5_EXTRA1_MESSAGE_MUTATION = gql`
+  mutation Exercise5Extra1Message($input: MessageInput!) {
     message(input: $input) {
       content
       id
@@ -35,12 +37,12 @@ function App() {
     data: messagesData,
     loading: loadingMessages,
     error: messagesError
-  } = useExercise6FinalMessagesQuery();
+  } = useExercise5Extra1MessagesQuery();
 
   const [
     saveMessage,
-    { loading: addingMessage }
-  ] = useExercise6FinalMessageMutation();
+    { loading: addingMessage, error: addingMessageError }
+  ] = useExercise5Extra1MessageMutation();
 
   async function handleOnMessage(message: string) {
     try {
@@ -53,15 +55,15 @@ function App() {
     } catch {}
   }
 
-  function updateCache(mutationPayload: Exercise6FinalMessageMutation) {
-    const dataFromCache = apolloClient.readQuery<Exercise6FinalMessagesQuery>({
-      query: EXERCISE6_FINAL_MESSAGES_QUERY
+  function updateCache(mutationPayload: Exercise5Extra1MessageMutation) {
+    const dataFromCache = apolloClient.readQuery<Exercise5Extra1MessagesQuery>({
+      query: EXERCISE5_EXTRA1_MESSAGES_QUERY
     });
 
     if (!dataFromCache) return;
 
-    apolloClient.writeQuery<Exercise6FinalMessagesQuery>({
-      query: EXERCISE6_FINAL_MESSAGES_QUERY,
+    apolloClient.writeQuery<Exercise5Extra1MessagesQuery>({
+      query: EXERCISE5_EXTRA1_MESSAGES_QUERY,
       data: {
         messages: [...dataFromCache.messages, mutationPayload.message]
       }
@@ -69,6 +71,8 @@ function App() {
   }
 
   if (messagesError) return <p>error...</p>;
+
+  if (addingMessageError) return <p>could not send, refresh the page!</p>;
 
   if (loadingMessages || !messagesData) return <p>loading ...</p>;
 
@@ -89,4 +93,5 @@ function Usage() {
   );
 }
 
+export { App };
 export default Usage;

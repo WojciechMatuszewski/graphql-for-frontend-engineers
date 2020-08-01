@@ -1,92 +1,100 @@
-import { gql, useApolloClient } from "@apollo/client";
 import React from "react";
-import { ApolloClientSimpleProvider } from "../apollo/Provider";
-import { Chat } from "../ui/Chat";
 import {
-  Exercise6FinalMessageMutation,
-  Exercise6FinalMessagesQuery,
-  useExercise6FinalMessageMutation,
-  useExercise6FinalMessagesQuery
-} from "./codegen/generated";
+  getBackendGraphQLURI,
+  getMockAuthorizationToken
+} from "../apollo/Provider";
+import {
+  InMemoryCache,
+  gql,
+  useMutation,
+  ApolloLink,
+  useQuery,
+  ApolloProvider,
+  HttpLink,
+  ApolloClient
+} from "@apollo/client";
+import { UserProfile, User } from "../ui/User";
 
-const EXERCISE6_FINAL_MESSAGES_QUERY = gql`
-  query Exercise6FinalMessages {
-    messages(limit: 10) {
-      content
-      id
-    }
-  }
-`;
+const httpLink = new HttpLink({
+  uri: getBackendGraphQLURI()
+});
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const EXERCISE6_FINAL_MESSAGE_MUTATION = gql`
-  mutation Exercise6FinalMessage($input: MessageInput!) {
-    message(input: $input) {
-      content
-      id
+const authMiddlewareLink = new ApolloLink((operation, forward) => {
+  const prevHeaders = operation.getContext().headers || {};
+  operation.setContext({
+    headers: {
+      ...prevHeaders,
+      Authorization: getMockAuthorizationToken()
     }
-  }
-`;
+  });
+
+  return forward(operation);
+});
+
+const cache = new InMemoryCache();
+const combinedLinks = ApolloLink.from([authMiddlewareLink, httpLink]);
+const client = new ApolloClient({ cache, link: combinedLinks });
 
 function App() {
-  const apolloClient = useApolloClient();
+  return (
+    <ApolloProvider client={client}>
+      <UserProfileStuff />
+    </ApolloProvider>
+  );
+}
 
-  const {
-    data: messagesData,
-    loading: loadingMessages,
-    error: messagesError
-  } = useExercise6FinalMessagesQuery();
+// ------ implementation details \/ ----- /
+const EXERCISE6_FINAL_USER_QUERY = gql`
+  query Exercise6FinalUser {
+    user {
+      id
+      firstName
+      hobbies
+      lastName
+    }
+  }
+`;
+
+const EXERCISE6_FINAL_USER_MUTATION = gql`
+  mutation Exercise6FinalUser($input: UpdateUserInput!) {
+    updateUser(input: $input) {
+      firstName
+      lastName
+      id
+      hobbies
+    }
+  }
+`;
+
+function UserProfileStuff() {
+  const { data, loading: queryLoading, error: queryError } = useQuery<{
+    user: User;
+  }>(EXERCISE6_FINAL_USER_QUERY);
 
   const [
-    saveMessage,
-    { loading: addingMessage }
-  ] = useExercise6FinalMessageMutation();
+    mutate,
+    { loading: onEditLoading, error: updatingError }
+  ] = useMutation(EXERCISE6_FINAL_USER_MUTATION);
 
-  async function handleOnMessage(message: string) {
-    try {
-      const mutationResult = await saveMessage({
-        variables: { input: { content: message } }
-      });
-
-      if (!mutationResult || !mutationResult.data) return;
-      updateCache(mutationResult.data);
-    } catch {}
+  async function handleOnEdit(user: any) {
+    await mutate({ variables: { input: user } });
   }
 
-  function updateCache(mutationPayload: Exercise6FinalMessageMutation) {
-    const dataFromCache = apolloClient.readQuery<Exercise6FinalMessagesQuery>({
-      query: EXERCISE6_FINAL_MESSAGES_QUERY
-    });
+  if (queryError || updatingError) return <p> error ...</p>;
 
-    if (!dataFromCache) return;
-
-    apolloClient.writeQuery<Exercise6FinalMessagesQuery>({
-      query: EXERCISE6_FINAL_MESSAGES_QUERY,
-      data: {
-        messages: [...dataFromCache.messages, mutationPayload.message]
-      }
-    });
-  }
-
-  if (messagesError) return <p>error...</p>;
-
-  if (loadingMessages || !messagesData) return <p>loading ...</p>;
+  if (queryLoading || !data) return <p>loading...</p>;
 
   return (
-    <Chat
-      messages={messagesData.messages}
-      loading={addingMessage}
-      onMessage={handleOnMessage}
+    <UserProfile
+      user={data.user}
+      onEditLoading={onEditLoading}
+      onEdit={handleOnEdit}
     />
   );
 }
 
 function Usage() {
-  return (
-    <ApolloClientSimpleProvider>
-      <App />
-    </ApolloClientSimpleProvider>
-  );
+  return <App />;
 }
 
 export default Usage;
