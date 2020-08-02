@@ -30,9 +30,15 @@ function UserProfile({ user, onEdit, onEditLoading }: Props) {
   const [editing, setEditing] = React.useState(false);
   const toggleEditing = () => setEditing((prev) => !prev);
 
+  const isMountedRef = React.useRef(false);
+  React.useEffect(() => {
+    isMountedRef.current = true;
+    return () => void (isMountedRef.current = false);
+  }, []);
+
   async function onSubmit(user: User) {
     await onEdit(user);
-    toggleEditing();
+    isMountedRef.current && toggleEditing();
   }
 
   return (

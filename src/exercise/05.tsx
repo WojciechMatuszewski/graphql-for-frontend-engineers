@@ -6,21 +6,21 @@ import { ApolloClientSimpleProvider } from "../apollo/Provider";
  *
  * You will also need apolloClient for cache updates.
  * import { gql, useApolloClient } from "@apollo/client";
+ *
  * */
 
-// define your query and mutation operations here
-
-/*
+/* Define your operations.
+ *
  * const EXERCISE6_MESSAGES_QUERY =
  *
  * const EXERCISE6_MESSAGE_MUTATION =
+ *
  * */
 
 function App() {
   /*
-   * Import generated hooks so that you can perform the mutation and also pull in the messages.
+   * Import generated hooks so that you can perform the mutation and pull in the messages.
    *
-   * Get the `apolloClient` using the `useApolloClient` hook.
    * */
 
   /*
@@ -29,15 +29,17 @@ function App() {
    *
    * async function handleOnMessage(message: string) {
    *
-   * Perform the mutation here.
+   *  1. Perform the mutation.
    *
-   * Read and Write EXERCISE6_MESSAGES_QUERY using the `apolloClient`. Update the cache.
-   * }
+   *  2. Update `update` function to interact with the cache.
+   *
+   *}
    * */
 
   return null;
 }
 
+// Do not make changes to the `Usage` component.
 function Usage() {
   return (
     <ApolloClientSimpleProvider>
