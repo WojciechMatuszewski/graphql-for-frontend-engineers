@@ -31,7 +31,7 @@ function App() {
   const {
     data: messagesData,
     loading: loadingMessages,
-    error: messagesError
+    error: gettingMessagesError
   } = useExercise5Extra2MessagesQuery();
 
   const [
@@ -52,9 +52,8 @@ function App() {
     } catch {}
   }
 
-  if (messagesError) return <p>error...</p>;
-
-  if (addingMessageError) return <p>could not send, refresh the page!</p>;
+  if (gettingMessagesError) return <p>Could not fetch the messages</p>;
+  if (addingMessageError) return <p>Could not send the message</p>;
 
   if (loadingMessages || !messagesData) return <p>loading ...</p>;
 

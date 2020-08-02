@@ -1,6 +1,6 @@
 import React from "react";
 import { App, EXERCISE2_EXTRA_3_MESSAGES_QUERY } from "../final/02.extra-3";
-import { render, screen, wait } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import { MockedProvider, MockedResponse } from "@apollo/client/testing";
 
 const QueryMockedResponse: MockedResponse = {
@@ -28,9 +28,7 @@ describe("02.extra-1 simple test", () => {
       </MockedProvider>
     );
 
-    await wait(() =>
-      expect(screen.queryByText(/first mock message/i)).toBeInTheDocument()
-    );
+    expect(await screen.findByText(/first mock message/i)).toBeInTheDocument();
     expect(screen.queryByText(/second mock message/i)).toBeInTheDocument();
   });
 });

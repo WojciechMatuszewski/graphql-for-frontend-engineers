@@ -19,8 +19,7 @@ function App() {
   const { data, loading, error } = useExercise4FinalMessagesQuery();
 
   if (error) return <p>error...</p>;
-
-  if (loading || !data || !data.messages) return <p>loading ...</p>;
+  if (loading || !data || !data) return <p>loading ...</p>;
 
   return <ChatMessagesList messages={data.messages} loading={loading} />;
 }

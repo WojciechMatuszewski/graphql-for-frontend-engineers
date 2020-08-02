@@ -20,8 +20,8 @@ function App() {
     EXERCISE2_EXTRA_1_MESSAGES_QUERY
   );
 
-  if (error) return <p>error</p>;
-  if (loading || !data?.messages) return <p>Loading..</p>;
+  if (error) return <p>Error</p>;
+  if (loading || !data) return <p>Loading...</p>;
 
   return <ChatMessagesList messages={data.messages} />;
 }

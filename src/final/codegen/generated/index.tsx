@@ -11,6 +11,37 @@ export type Scalars = {
   Float: number;
 };
 
+export type Message = {
+   __typename?: 'Message';
+  id: Scalars['ID'];
+  content: Scalars['String'];
+  createdAt: Scalars['String'];
+};
+
+export type User = {
+   __typename?: 'User';
+  id: Scalars['ID'];
+  firstName: Scalars['String'];
+  lastName: Scalars['String'];
+  hobbies?: Maybe<Array<Scalars['String']>>;
+};
+
+export type Query = {
+   __typename?: 'Query';
+  messages: Array<Message>;
+  user: User;
+};
+
+
+export type QueryMessagesArgs = {
+  limit?: Maybe<Scalars['Int']>;
+  delay?: Maybe<Scalars['Int']>;
+};
+
+export type MessageInput = {
+  content: Scalars['String'];
+};
+
 export type Mutation = {
    __typename?: 'Mutation';
   message: Message;
@@ -27,41 +58,10 @@ export type MutationUpdateUserArgs = {
   input: UpdateUserInput;
 };
 
-export type User = {
-   __typename?: 'User';
-  id: Scalars['ID'];
-  firstName: Scalars['String'];
-  lastName: Scalars['String'];
-  hobbies?: Maybe<Array<Scalars['String']>>;
-};
-
-export type Message = {
-   __typename?: 'Message';
-  id: Scalars['ID'];
-  content: Scalars['String'];
-  createdAt: Scalars['String'];
-};
-
-export type MessageInput = {
-  content: Scalars['String'];
-};
-
 export type UpdateUserInput = {
   firstName?: Maybe<Scalars['String']>;
   lastName?: Maybe<Scalars['String']>;
   hobbies?: Maybe<Array<Scalars['String']>>;
-};
-
-export type Query = {
-   __typename?: 'Query';
-  messages: Array<Message>;
-  user: User;
-};
-
-
-export type QueryMessagesArgs = {
-  limit?: Maybe<Scalars['Int']>;
-  delay?: Maybe<Scalars['Int']>;
 };
 
 export type Exercise4FinalMessagesQueryVariables = {};
@@ -123,10 +123,10 @@ export type Exercise5Extra2MessageMutation = (
   ) }
 );
 
-export type Exercise6FinalMessagesQueryVariables = {};
+export type Exercise5FinalMessagesQueryVariables = {};
 
 
-export type Exercise6FinalMessagesQuery = (
+export type Exercise5FinalMessagesQuery = (
   { __typename?: 'Query' }
   & { messages: Array<(
     { __typename?: 'Message' }
@@ -134,12 +134,12 @@ export type Exercise6FinalMessagesQuery = (
   )> }
 );
 
-export type Exercise6FinalMessageMutationVariables = {
+export type Exercise5FinalMessageMutationVariables = {
   input: MessageInput;
 };
 
 
-export type Exercise6FinalMessageMutation = (
+export type Exercise5FinalMessageMutation = (
   { __typename?: 'Mutation' }
   & { message: (
     { __typename?: 'Message' }
@@ -314,8 +314,8 @@ export function useExercise5Extra2MessageMutation(baseOptions?: ApolloReactHooks
 export type Exercise5Extra2MessageMutationHookResult = ReturnType<typeof useExercise5Extra2MessageMutation>;
 export type Exercise5Extra2MessageMutationResult = ApolloReactCommon.MutationResult<Exercise5Extra2MessageMutation>;
 export type Exercise5Extra2MessageMutationOptions = ApolloReactCommon.BaseMutationOptions<Exercise5Extra2MessageMutation, Exercise5Extra2MessageMutationVariables>;
-export const Exercise6FinalMessagesDocument = gql`
-    query Exercise6FinalMessages {
+export const Exercise5FinalMessagesDocument = gql`
+    query Exercise5FinalMessages {
   messages(limit: 10) {
     content
     id
@@ -324,59 +324,59 @@ export const Exercise6FinalMessagesDocument = gql`
     `;
 
 /**
- * __useExercise6FinalMessagesQuery__
+ * __useExercise5FinalMessagesQuery__
  *
- * To run a query within a React component, call `useExercise6FinalMessagesQuery` and pass it any options that fit your needs.
- * When your component renders, `useExercise6FinalMessagesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useExercise5FinalMessagesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useExercise5FinalMessagesQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useExercise6FinalMessagesQuery({
+ * const { data, loading, error } = useExercise5FinalMessagesQuery({
  *   variables: {
  *   },
  * });
  */
-export function useExercise6FinalMessagesQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<Exercise6FinalMessagesQuery, Exercise6FinalMessagesQueryVariables>) {
-        return ApolloReactHooks.useQuery<Exercise6FinalMessagesQuery, Exercise6FinalMessagesQueryVariables>(Exercise6FinalMessagesDocument, baseOptions);
+export function useExercise5FinalMessagesQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<Exercise5FinalMessagesQuery, Exercise5FinalMessagesQueryVariables>) {
+        return ApolloReactHooks.useQuery<Exercise5FinalMessagesQuery, Exercise5FinalMessagesQueryVariables>(Exercise5FinalMessagesDocument, baseOptions);
       }
-export function useExercise6FinalMessagesLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<Exercise6FinalMessagesQuery, Exercise6FinalMessagesQueryVariables>) {
-          return ApolloReactHooks.useLazyQuery<Exercise6FinalMessagesQuery, Exercise6FinalMessagesQueryVariables>(Exercise6FinalMessagesDocument, baseOptions);
+export function useExercise5FinalMessagesLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<Exercise5FinalMessagesQuery, Exercise5FinalMessagesQueryVariables>) {
+          return ApolloReactHooks.useLazyQuery<Exercise5FinalMessagesQuery, Exercise5FinalMessagesQueryVariables>(Exercise5FinalMessagesDocument, baseOptions);
         }
-export type Exercise6FinalMessagesQueryHookResult = ReturnType<typeof useExercise6FinalMessagesQuery>;
-export type Exercise6FinalMessagesLazyQueryHookResult = ReturnType<typeof useExercise6FinalMessagesLazyQuery>;
-export type Exercise6FinalMessagesQueryResult = ApolloReactCommon.QueryResult<Exercise6FinalMessagesQuery, Exercise6FinalMessagesQueryVariables>;
-export const Exercise6FinalMessageDocument = gql`
-    mutation Exercise6FinalMessage($input: MessageInput!) {
+export type Exercise5FinalMessagesQueryHookResult = ReturnType<typeof useExercise5FinalMessagesQuery>;
+export type Exercise5FinalMessagesLazyQueryHookResult = ReturnType<typeof useExercise5FinalMessagesLazyQuery>;
+export type Exercise5FinalMessagesQueryResult = ApolloReactCommon.QueryResult<Exercise5FinalMessagesQuery, Exercise5FinalMessagesQueryVariables>;
+export const Exercise5FinalMessageDocument = gql`
+    mutation Exercise5FinalMessage($input: MessageInput!) {
   message(input: $input) {
     content
     id
   }
 }
     `;
-export type Exercise6FinalMessageMutationFn = ApolloReactCommon.MutationFunction<Exercise6FinalMessageMutation, Exercise6FinalMessageMutationVariables>;
+export type Exercise5FinalMessageMutationFn = ApolloReactCommon.MutationFunction<Exercise5FinalMessageMutation, Exercise5FinalMessageMutationVariables>;
 
 /**
- * __useExercise6FinalMessageMutation__
+ * __useExercise5FinalMessageMutation__
  *
- * To run a mutation, you first call `useExercise6FinalMessageMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useExercise6FinalMessageMutation` returns a tuple that includes:
+ * To run a mutation, you first call `useExercise5FinalMessageMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useExercise5FinalMessageMutation` returns a tuple that includes:
  * - A mutate function that you can call at any time to execute the mutation
  * - An object with fields that represent the current status of the mutation's execution
  *
  * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
  *
  * @example
- * const [exercise6FinalMessageMutation, { data, loading, error }] = useExercise6FinalMessageMutation({
+ * const [exercise5FinalMessageMutation, { data, loading, error }] = useExercise5FinalMessageMutation({
  *   variables: {
  *      input: // value for 'input'
  *   },
  * });
  */
-export function useExercise6FinalMessageMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<Exercise6FinalMessageMutation, Exercise6FinalMessageMutationVariables>) {
-        return ApolloReactHooks.useMutation<Exercise6FinalMessageMutation, Exercise6FinalMessageMutationVariables>(Exercise6FinalMessageDocument, baseOptions);
+export function useExercise5FinalMessageMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<Exercise5FinalMessageMutation, Exercise5FinalMessageMutationVariables>) {
+        return ApolloReactHooks.useMutation<Exercise5FinalMessageMutation, Exercise5FinalMessageMutationVariables>(Exercise5FinalMessageDocument, baseOptions);
       }
-export type Exercise6FinalMessageMutationHookResult = ReturnType<typeof useExercise6FinalMessageMutation>;
-export type Exercise6FinalMessageMutationResult = ApolloReactCommon.MutationResult<Exercise6FinalMessageMutation>;
-export type Exercise6FinalMessageMutationOptions = ApolloReactCommon.BaseMutationOptions<Exercise6FinalMessageMutation, Exercise6FinalMessageMutationVariables>;
+export type Exercise5FinalMessageMutationHookResult = ReturnType<typeof useExercise5FinalMessageMutation>;
+export type Exercise5FinalMessageMutationResult = ApolloReactCommon.MutationResult<Exercise5FinalMessageMutation>;
+export type Exercise5FinalMessageMutationOptions = ApolloReactCommon.BaseMutationOptions<Exercise5FinalMessageMutation, Exercise5FinalMessageMutationVariables>;

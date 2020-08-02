@@ -1,5 +1,9 @@
 import { MockedProvider, MockedResponse } from "@apollo/client/testing";
-import { render, screen, wait } from "@testing-library/react";
+import {
+  render,
+  screen,
+  waitForElementToBeRemoved
+} from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import React from "react";
 import {
@@ -59,15 +63,15 @@ describe("03.extra-1 test", () => {
     );
 
     expect(screen.getByText(/loading/i)).toBeInTheDocument();
-    await wait(() => expect(screen.getByText(/wojciech/i)).toBeInTheDocument());
+    expect(await screen.findByText(/wojciech/i)).toBeInTheDocument();
 
     userEvent.click(screen.getByText(/edit/i));
 
     await userEvent.type(screen.getByLabelText(/first name/i), "Mateusz");
     userEvent.click(screen.getByRole("button", { name: /submit/i }));
 
-    await wait(() =>
-      expect(screen.queryByTestId("userProfileForm")).not.toBeInTheDocument()
+    await waitForElementToBeRemoved(() =>
+      screen.getByTestId("userProfileForm")
     );
 
     expect(screen.getByText(/mateusz/i)).toBeInTheDocument();

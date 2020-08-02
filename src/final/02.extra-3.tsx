@@ -26,8 +26,8 @@ function App({ limit }: Props) {
     }
   );
 
-  if (error) return <p>error</p>;
-  if (loading || !data?.messages) return <p>Loading..</p>;
+  if (error) return <p>Error</p>;
+  if (loading || !data) return <p>Loading...</p>;
 
   return <ChatMessagesList messages={data.messages} loading={loading} />;
 }
