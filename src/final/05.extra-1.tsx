@@ -1,11 +1,9 @@
-import { gql, useApolloClient } from "@apollo/client";
+import { gql } from "@apollo/client";
 // 💯 Tests for the happy and sad path.
 import React from "react";
 import { ApolloClientSimpleProvider } from "../apollo/Provider";
 import { Chat } from "../ui/Chat";
 import {
-  Exercise5Extra1MessageMutation,
-  Exercise5Extra1MessagesQuery,
   useExercise5Extra1MessageMutation,
   useExercise5Extra1MessagesQuery
 } from "./codegen/generated";
@@ -31,8 +29,6 @@ export const EXERCISE5_EXTRA1_MESSAGE_MUTATION = gql`
 `;
 
 function App() {
-  const apolloClient = useApolloClient();
-
   const {
     data: messagesData,
     loading: loadingMessages,
@@ -46,28 +42,24 @@ function App() {
 
   async function handleOnMessage(message: string) {
     try {
-      const mutationResult = await saveMessage({
-        variables: { input: { content: message } }
+      await saveMessage({
+        variables: { input: { content: message } },
+        update: (cache, { data }) => {
+          if (!data) return;
+
+          const newMessageCacheId = cache.identify(data.message);
+          if (!newMessageCacheId) return;
+
+          cache.modify({
+            fields: {
+              messages: (existingRefs = [], { toReference }) => {
+                return [...existingRefs, toReference(newMessageCacheId)];
+              }
+            }
+          });
+        }
       });
-
-      if (!mutationResult || !mutationResult.data) return;
-      updateCache(mutationResult.data);
     } catch {}
-  }
-
-  function updateCache(mutationPayload: Exercise5Extra1MessageMutation) {
-    const dataFromCache = apolloClient.readQuery<Exercise5Extra1MessagesQuery>({
-      query: EXERCISE5_EXTRA1_MESSAGES_QUERY
-    });
-
-    if (!dataFromCache) return;
-
-    apolloClient.writeQuery<Exercise5Extra1MessagesQuery>({
-      query: EXERCISE5_EXTRA1_MESSAGES_QUERY,
-      data: {
-        messages: [...dataFromCache.messages, mutationPayload.message]
-      }
-    });
   }
 
   if (gettingMessagesError) return <p>Could not fetch the messages</p>;

@@ -4,8 +4,7 @@ import userEvent from "@testing-library/user-event";
 import {
   render,
   screen,
-  waitForElementToBeRemoved,
-  waitForElement
+  waitForElementToBeRemoved
 } from "@testing-library/react";
 import { MockedProvider, MockedResponse } from "@apollo/client/testing";
 import {
@@ -21,8 +20,8 @@ const MESSAGES_QUERY_MOCK: MockedResponse = {
   result: {
     data: {
       messages: [
-        { id: "1", content: "First Message" },
-        { id: "2", content: "Second Message" }
+        { id: "1", content: "First Message", __typename: "Message" },
+        { id: "2", content: "Second Message", __typename: "Message" }
       ]
     }
   }
@@ -37,7 +36,8 @@ const SUCCESSFUL_MUTATION_MOCK: MockedResponse = {
     data: {
       message: {
         id: "3",
-        content: "Third Message"
+        content: "Third Message",
+        __typename: "Message"
       }
     }
   }

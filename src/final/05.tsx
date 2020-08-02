@@ -1,9 +1,8 @@
-import { gql, useApolloClient } from "@apollo/client";
+import { gql } from "@apollo/client";
 import React from "react";
 import { ApolloClientSimpleProvider } from "../apollo/Provider";
 import { Chat } from "../ui/Chat";
 import {
-  Exercise5FinalMessageMutation,
   Exercise5FinalMessagesQuery,
   useExercise5FinalMessageMutation,
   useExercise5FinalMessagesQuery
@@ -29,8 +28,6 @@ const EXERCISE5_FINAL_MESSAGE_MUTATION = gql`
 `;
 
 function App() {
-  const apolloClient = useApolloClient();
-
   const {
     data: messagesData,
     loading: loadingMessages,
@@ -44,28 +41,26 @@ function App() {
 
   async function handleOnMessage(message: string) {
     try {
-      const mutationResult = await saveMessage({
-        variables: { input: { content: message } }
+      await saveMessage({
+        variables: { input: { content: message } },
+        update: (cache, { data }) => {
+          if (!data) return;
+          const { message } = data;
+
+          const dataFromCache = cache.readQuery<Exercise5FinalMessagesQuery>({
+            query: EXERCISE5_FINAL_MESSAGES_QUERY
+          });
+          if (!dataFromCache) return;
+
+          cache.writeQuery<Exercise5FinalMessagesQuery>({
+            query: EXERCISE5_FINAL_MESSAGES_QUERY,
+            data: {
+              messages: [...dataFromCache.messages, message]
+            }
+          });
+        }
       });
-
-      if (!mutationResult || !mutationResult.data) return;
-      updateCache(mutationResult.data);
     } catch {}
-  }
-
-  function updateCache(mutationPayload: Exercise5FinalMessageMutation) {
-    const dataFromCache = apolloClient.readQuery<Exercise5FinalMessagesQuery>({
-      query: EXERCISE5_FINAL_MESSAGES_QUERY
-    });
-
-    if (!dataFromCache) return;
-
-    apolloClient.writeQuery<Exercise5FinalMessagesQuery>({
-      query: EXERCISE5_FINAL_MESSAGES_QUERY,
-      data: {
-        messages: [...dataFromCache.messages, mutationPayload.message]
-      }
-    });
   }
 
   if (gettingMessagesError) return <p>Could not fetch the messages</p>;
