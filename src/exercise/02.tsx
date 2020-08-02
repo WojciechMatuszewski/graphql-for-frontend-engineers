@@ -1,22 +1,34 @@
 import React from "react";
 import { ApolloClientSimpleProvider } from "../apollo/Provider";
+/*
+ * You will need these `Apollo Client` related things.
+ * import { gql, useQuery } from "@apollo/client"
+ *
+ * And these, specific to this exercise.
+ * import { ChatMessagesList } from "../ui/Chat"
+ *
+ * */
 
-// import { ChatMessagesList } from "../ui/Chat";
-// import { gql, useQuery } from "@apollo/client";
-
-/* Create a query with meaningful name. We will need it later on.
-/ Also, do not forget to name the query operation itself. */
-
-// const SOME_MEANINGFUL_NAME_QUERY = gql``
+/*
+ * Create variable which holds the `query` operation.
+ * Remember to make sure it has a meaningful name. Make sure to also name the operation name itself.
+ *
+ * const SOME_MEANINGFUL_NAME_QUERY = gql`
+ *  query SOME_MEANINGFUL_OPERATION_NAME {}
+ * `
+ * */
 
 function App() {
-  /* use `useQuery` and get the results to `ChatMessagesList` component
-     const {} = useQuery(SOME_MEANINGFUL_NAME_QUERY)*/
+  /*
+   * Use `useQuery` hook to get the results.
+   * Results should be passed in to `ChatMessagesList` component.
+   *
+   * */
 
   return null;
 }
 
-// Do not change the usage.
+// Do not change the `Usage` component.
 function Usage() {
   return (
     <ApolloClientSimpleProvider>

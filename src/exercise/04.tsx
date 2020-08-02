@@ -5,7 +5,7 @@ import { ChatMessagesList } from "../ui/Chat";
 
 const EXERCISE4_MESSAGES_QUERY = gql`
   # query name has a huge impact on the generated operation name.
-  query Exercise5Messages {
+  query Exercise4Messages {
     messages {
       id
       content
@@ -25,6 +25,7 @@ function App() {
   return <ChatMessagesList loading={loading} messages={data.messages} />;
 }
 
+// Do not change the `Usage` component.
 function Usage() {
   return (
     <ApolloClientSimpleProvider>

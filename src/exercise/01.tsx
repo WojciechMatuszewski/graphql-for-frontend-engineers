@@ -1,15 +1,21 @@
 import React from "react";
+/*
+ * You will need these `Apollo Client` related things.
+ * import { ApolloProvider, HttpLink, InMemoryCache } from "@apollo/client"
+ *
+ * And these, specific to the backend I've prepared.
+ * import { getBackendGraphQLURI, getMockAuthorizationToken } from "../apollo/Provider"
+ *
+ * */
 
-// import all the dependencies here
-
-// create necessary constructs. Get the backend address using the `getBackendGraphQLURI` function.
+// Initialize the client here. Remember to create the `cache` and `httpLink`.
 
 function App() {
-  // initialize `ApolloProvider`. It has to contain `children` prop so just pass whatever you feel like.
+  // Render `ApolloProvider` with whatever children you like.
   return null;
 }
 
-// Do not change usage.
+// Do not change the `Usage` component.
 function Usage() {
   return <App />;
 }

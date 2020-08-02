@@ -12,15 +12,35 @@ We will cover:
 - `mutation` operation
 - `fragments`
 - testing
-- _middlewares_ and _afterwares_ along with authorization aspects.
 - basics of cache
+- _middlewares_ and _afterwares_ along with authorization aspects.
+
+## Schedule
+
+- Introduction
+
+* Setting up `Apollo Client`
+
+- Querying data
+
+* **Break**
+
+- Mutations and `fragments`
+
+- Code generation
+
+* **Break**
+
+- Basics of cache
+
+* `Apollo Links` - **if we have time**
 
 ## Prerequisites
 
 You will need a couple of things installed on your local machine:
 
 - Docker
-- Node.JS
+- Node.JS 12+
 
 To get the most out of this workshop you should be comfortable with `Typescript` and `React`.
 

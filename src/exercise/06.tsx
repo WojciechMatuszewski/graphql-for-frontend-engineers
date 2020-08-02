@@ -1,19 +1,38 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import React from "react";
-import { gql, useQuery, useMutation } from "@apollo/client";
+import {
+  InMemoryCache,
+  gql,
+  useMutation,
+  ApolloLink,
+  useQuery,
+  ApolloProvider,
+  HttpLink,
+  ApolloClient
+} from "@apollo/client";
 import { User, UserProfile } from "../ui/User";
+/*
+ * You will need these, specific to the backend I've prepared.
+ * import { getBackendGraphQLURI, getMockAuthorizationToken } from "../apollo/Provider"
+ *
+ * */
 
-// you will need to get the static token from this method
-// import { getMockAuthorizationToken } from "../apollo/Provider";
+/*
+ * Create the links here.
+ * const httpLink = new HttpLink()
+ * const authorizationLink = new ApolloLink()
+ *
+ * */
 
-// create `httpLink` here.
-
-// You can create custom middleware links using the `ApolloLink` class.
-// import { ApolloLink } from "@apollo/client"
-// const myMiddlewareLink = new ApolloLink()
+/*
+ * Merge the links together and pass then to `ApolloClient` constructor.
+ * const combinedLinks = ApolloLink.from([])
+ * const client = new ApolloClient({link: combinedLinks})
+ *
+ * */
 
 function App() {
-  // use `ApolloProvider` and pass the client
-  // wrap the `UserProfileStuff` with the `ApolloProvider`
+  // Use `ApolloProvider` to wrap the UserProfileStuff component to render the UI.
   return null;
 }
 
@@ -30,7 +49,7 @@ const EXERCISE6_USER_QUERY = gql`
 `;
 
 const EXERCISE6_USER_MUTATION = gql`
-  mutation Exercise6FinalUser($input: UpdateUserInput!) {
+  mutation Exercise6User($input: UpdateUserInput!) {
     updateUser(input: $input) {
       firstName
       lastName
@@ -67,6 +86,7 @@ function UserProfileStuff() {
   );
 }
 
+// Do not change the `Usage` component.
 function Usage() {
   return <App />;
 }
