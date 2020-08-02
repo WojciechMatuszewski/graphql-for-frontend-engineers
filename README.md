@@ -9,13 +9,20 @@ The goal of this workshop is to get you comfortable working with `GraphQL` and `
 We will cover:
 
 - `query` operation
-- `mutation` operation
+
+* `mutation` operation
+
 - `fragments`
-- testing
-- basics of cache
-- _middlewares_ and _afterwares_ along with authorization aspects.
+
+* Testing
+
+- Basics of cache
+
+* How `Apollo Links` work - **if we have time**.
 
 ## Schedule
+
+The workshop will last up to 3 hours so that you are not overloaded with information.
 
 - Introduction
 
