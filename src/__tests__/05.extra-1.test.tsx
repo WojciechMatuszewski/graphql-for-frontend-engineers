@@ -1,13 +1,14 @@
 import React from "react";
-import { App } from "../final/05.extra-1";
 import userEvent from "@testing-library/user-event";
 import {
   render,
   screen,
+  wait,
   waitForElementToBeRemoved
 } from "@testing-library/react";
 import { MockedProvider, MockedResponse } from "@apollo/client/testing";
 import {
+  App,
   EXERCISE5_EXTRA1_MESSAGE_MUTATION,
   EXERCISE5_EXTRA1_MESSAGES_QUERY
 } from "../final/05.extra-1";
@@ -20,6 +21,7 @@ const MESSAGES_QUERY_MOCK: MockedResponse = {
   result: {
     data: {
       messages: [
+        // __typename is only needed because we are using `cache.modify`
         { id: "1", content: "First Message", __typename: "Message" },
         { id: "2", content: "Second Message", __typename: "Message" }
       ]
@@ -27,39 +29,37 @@ const MESSAGES_QUERY_MOCK: MockedResponse = {
   }
 };
 
+const TEST_MESSAGE = "Third message";
 const SUCCESSFUL_MUTATION_MOCK: MockedResponse = {
   request: {
     query: EXERCISE5_EXTRA1_MESSAGE_MUTATION,
-    variables: { input: { content: "Third Message" } }
+    variables: { input: { content: TEST_MESSAGE } }
   },
   result: {
     data: {
       message: {
+        // __typename is only needed because we are using `cache.modify`
+        __typename: "Message",
         id: "3",
-        content: "Third Message",
-        __typename: "Message"
+        content: TEST_MESSAGE
       }
     }
   }
 };
-
 const ERROR_MUTATION_MOCK: MockedResponse = {
   request: {
     query: EXERCISE5_EXTRA1_MESSAGE_MUTATION,
-    variables: { input: { content: "Third Message" } }
+    variables: { input: { content: TEST_MESSAGE } }
   },
   result: {
     errors: [new GraphQLError("boom")]
   }
 };
 
-describe("05.extra-1 tests", () => {
-  it("happy path", async () => {
+describe("05", () => {
+  it("enables the user to post a message", async () => {
     render(
-      <MockedProvider
-        mocks={[MESSAGES_QUERY_MOCK, SUCCESSFUL_MUTATION_MOCK]}
-        addTypename={false}
-      >
+      <MockedProvider mocks={[MESSAGES_QUERY_MOCK, SUCCESSFUL_MUTATION_MOCK]}>
         <App />
       </MockedProvider>
     );
@@ -69,18 +69,18 @@ describe("05.extra-1 tests", () => {
     expect(screen.getByText(/first message/i)).toBeInTheDocument();
     expect(screen.getByText(/second message/i)).toBeInTheDocument();
 
-    await userEvent.type(screen.getByRole("textbox"), "Third Message");
+    await userEvent.type(screen.getByRole("textbox"), TEST_MESSAGE);
     userEvent.click(screen.getByRole("button", { name: /submit/i }));
 
-    expect(await screen.findByText(/third message/i)).toBeInTheDocument();
+    await wait(() => {});
+    // screen.debug();
+    await wait(() => expect(screen.getAllByRole("listitem")).toHaveLength(3));
+    expect(screen.getByText(TEST_MESSAGE)).toBeInTheDocument();
   });
 
-  it("sad path", async () => {
+  it("handles errors while posting a message", async () => {
     render(
-      <MockedProvider
-        mocks={[MESSAGES_QUERY_MOCK, ERROR_MUTATION_MOCK]}
-        addTypename={false}
-      >
+      <MockedProvider mocks={[MESSAGES_QUERY_MOCK, ERROR_MUTATION_MOCK]}>
         <App />
       </MockedProvider>
     );
@@ -90,9 +90,11 @@ describe("05.extra-1 tests", () => {
     expect(screen.getByText(/first message/i)).toBeInTheDocument();
     expect(screen.getByText(/second message/i)).toBeInTheDocument();
 
-    await userEvent.type(screen.getByRole("textbox"), "Third Message");
+    await userEvent.type(screen.getByRole("textbox"), TEST_MESSAGE);
     userEvent.click(screen.getByRole("button", { name: /submit/i }));
 
-    expect(await screen.findByText(/could not send/i)).toBeInTheDocument();
+    expect(
+      await screen.findByText(/could not send the message/i)
+    ).toBeInTheDocument();
   });
 });

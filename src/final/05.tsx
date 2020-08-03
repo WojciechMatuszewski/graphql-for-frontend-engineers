@@ -8,7 +8,7 @@ import {
   useExercise5FinalMessagesQuery
 } from "./codegen/generated";
 
-const EXERCISE5_FINAL_MESSAGES_QUERY = gql`
+export const EXERCISE5_FINAL_MESSAGES_QUERY = gql`
   query Exercise5FinalMessages {
     messages(limit: 10) {
       content
@@ -18,7 +18,7 @@ const EXERCISE5_FINAL_MESSAGES_QUERY = gql`
 `;
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-const EXERCISE5_FINAL_MESSAGE_MUTATION = gql`
+export const EXERCISE5_FINAL_MESSAGE_MUTATION = gql`
   mutation Exercise5FinalMessage($input: MessageInput!) {
     message(input: $input) {
       content
@@ -84,5 +84,5 @@ function Usage() {
     </ApolloClientSimpleProvider>
   );
 }
-
+export { App };
 export default Usage;

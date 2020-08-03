@@ -93,7 +93,7 @@ function ChatMessagesInput({ onSubmit }: ChatMessagesInputProps) {
         name="message"
         rules={[{ required: true, message: "Field required" }]}
       >
-        <Input placeholder="Type here..." />
+        <Input placeholder="Type here..." autoComplete="off" />
       </Form.Item>
       <Button htmlType="submit">Submit</Button>
     </Form>
