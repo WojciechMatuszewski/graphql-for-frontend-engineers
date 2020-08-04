@@ -62,7 +62,7 @@ describe("06.extra-3 tests", () => {
     const fetcher = jest.fn().mockResolvedValue({ token: "token" });
 
     const authLink = createAuthAfterwareLink(fetcher);
-    const errorLink = createLinkThatThrows(500, () => {});
+    const errorLink = createLinkThatThrows(500);
 
     const testLink = ApolloLink.from([authLink, errorLink]);
     makeRequest(testLink);

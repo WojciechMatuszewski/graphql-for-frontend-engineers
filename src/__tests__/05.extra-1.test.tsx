@@ -72,8 +72,6 @@ describe("05", () => {
     await userEvent.type(screen.getByRole("textbox"), TEST_MESSAGE);
     userEvent.click(screen.getByRole("button", { name: /submit/i }));
 
-    await wait(() => {});
-    // screen.debug();
     await wait(() => expect(screen.getAllByRole("listitem")).toHaveLength(3));
     expect(screen.getByText(TEST_MESSAGE)).toBeInTheDocument();
   });
