@@ -28,19 +28,19 @@ The workshop will last up to 3 hours so that you are not overloaded with informa
 
 * Setting up `Apollo Client`
 
-- Querying data
+- Querying data (with testing)
 
 * **Break**
 
-- Mutations and `fragments`
+- Mutations and `fragments` (with testing)
 
-- Code generation
+* Code generation
 
-* **Break**
+- **Break**
 
-- Basics of cache
+* Basics of cache (with testing)
 
-* `Apollo Links` - **if we have time**
+- `Apollo Links` - **if we have time**
 
 ## Prerequisites
 
@@ -53,7 +53,11 @@ To get the most out of this workshop you should be comfortable with `Typescript`
 
 ## Validation and setup
 
-To make sure everything is set up and that you are ready for the workshop run:
+To make sure everything is set up
+
+1. Make sure _Docker_ is running on your machine
+
+2. Run the validation script
 
 ```sh
 make validate
@@ -72,7 +76,7 @@ The application is available at [http://localhost:3000](http://localhost:3000).
 ## Playground
 
 Playground is there for you to explore the schema and operations that you can do. Whenever you are lost, not sure how to
-define given operation this is the place where you should look into (apart from asking me 🙂).
+define given operation, this is the place where you should look into (apart from asking me 🙂).
 
 The playground is available at [http://localhost:4000/playground](http://localhost:4000/playground).
 Before going there, **make sure you started the application**.
