@@ -1,14 +1,18 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import React from "react";
-/*
- * You will need these `Apollo Client` related things.
- * import { ApolloProvider, HttpLink, InMemoryCache } from "@apollo/client"
- *
- * And these, specific to the backend I've prepared.
- * import { getBackendGraphQLURI, getMockAuthorizationToken } from "../apollo/Provider"
- *
- * */
+import {
+  ApolloClient,
+  ApolloProvider as ApolloClientProvider,
+  HttpLink,
+  InMemoryCache
+} from "@apollo/client";
+import { getBackendGraphQLURI } from "../apollo/Provider";
 
 // Initialize the client here. Remember to create the `cache` and `httpLink`.
+const httpLink = undefined;
+const cache = undefined;
+
+const client = undefined;
 
 function App() {
   // Render `ApolloProvider` with whatever children you like.
