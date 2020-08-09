@@ -1,20 +1,14 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import { gql, useMutation, useQuery } from "@apollo/client";
 import React from "react";
 import { ApolloClientSimpleProvider } from "../apollo/Provider";
-/*
- * You will need these `Apollo Client` related things.
- * import { gql, useMutation, useQuery } from "@apollo/client";
- *
- * And these, specific to this exercise.
- * import { UserProfile } from "../ui/User";
- *
- * */
+import { User, UserProfile } from "../ui/User";
 
-/*
- * Create variables for the `query` and `mutation` operations. Remember about meaningful names.
- *
- * const QUERY_VARIABLE_NAME = gql``
- * const MUTATION_VARIABLE_NAME = gql``
- * */
+// Your user profile `query`. Consult `GraphQL playground` if you are not sure.
+// export const EXERCISE3_USER_QUERY = gql``;
+
+// Your user profile mutation. Consult `GraphQL playground` if you are not sure.
+// export const EXERCISE3_USER_MUTATION = gql``;
 
 function App() {
   /*
@@ -26,6 +20,7 @@ function App() {
    * */
 
   // Use `UserProfile` component to render the UI.
+
   return null;
 }
 
@@ -37,5 +32,5 @@ function Usage() {
     </ApolloClientSimpleProvider>
   );
 }
-
+export { App as Exercise3 };
 export default Usage;

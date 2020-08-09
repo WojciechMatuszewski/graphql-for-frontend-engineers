@@ -5,7 +5,7 @@ import { ApolloClientSimpleProvider } from "../apollo/Provider";
 import { ChatMessagesList, Message } from "../ui/Chat";
 
 // Define the query operation
-export const EXERCISE2_MESSAGES_QUERY = gql``;
+// export const EXERCISE2_MESSAGES_QUERY = gql``;
 
 function App() {
   /*
