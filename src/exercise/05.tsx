@@ -5,9 +5,9 @@ import { gql } from "@apollo/client";
 import { Chat } from "../ui/Chat";
 
 // Define your operations.
-export const EXERCISE5_MESSAGES_QUERY = gql``;
+// export const EXERCISE5_MESSAGES_QUERY = gql``;
 
-export const EXERCISE5_MESSAGE_MUTATION = gql``;
+// export const EXERCISE5_MESSAGE_MUTATION = gql``;
 
 function App() {
   // Import generated hooks so that you can perform the mutation and pull in the messages.
@@ -37,5 +37,5 @@ function Usage() {
   );
 }
 
-export { App };
+export { App as Exercise5 };
 export default Usage;

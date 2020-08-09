@@ -42,7 +42,7 @@
     "build": "craco build",
     "serve": "serve --no-clipboard --single --listen 8080 build",
     "test": "craco test --watchAll=false",
-    "codegen:final": "graphql-codegen --config ./src/final/codegen/codegen.yml",
+    "codegen": "graphql-codegen --config ./src/final/codegen/codegen.yml",
     "cy:open": "sudo cypress open",
     "cy:run": "cypress run",
     "cy:validate": "cypress run --config-file=cypress.validate.json",

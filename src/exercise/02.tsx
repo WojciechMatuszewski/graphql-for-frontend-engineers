@@ -26,4 +26,5 @@ function Usage() {
   );
 }
 
+export { App as Exercise2 };
 export default Usage;
