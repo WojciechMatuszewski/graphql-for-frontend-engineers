@@ -50,6 +50,8 @@ You will need a couple of things installed on your local machine:
 
 * Node.Js 12+
 
+- You might also want to install [Apollo Developer Tools extension](https://chrome.google.com/webstore/detail/apollo-client-developer-t/jdkknkkbebbapilgoeccciglkfbmbnfm)
+
 To get the most out of this workshop you should be comfortable with `Typescript` and `React`.
 
 ## Validation and setup
