@@ -47,7 +47,8 @@ The workshop will last up to 3 hours so that you are not overloaded with informa
 You will need a couple of things installed on your local machine:
 
 - Docker
-- Node.JS 12+
+
+* Node.Js 12+
 
 To get the most out of this workshop you should be comfortable with `Typescript` and `React`.
 
