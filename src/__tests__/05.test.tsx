@@ -9,6 +9,7 @@ import {
 import { MockedProvider, MockedResponse } from "@apollo/client/testing";
 import userEvent from "@testing-library/user-event";
 import { GraphQLError } from "graphql";
+import { Exercise5 } from "../exercise/05";
 
 describe("05", () => {
   it("enables the user to post a message", async () => {

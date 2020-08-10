@@ -8,6 +8,7 @@ import {
 } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { GraphQLError } from "graphql";
+import { Exercise3 } from "../exercise/03";
 
 describe("03", () => {
   it("enables the user to update his profile", async () => {

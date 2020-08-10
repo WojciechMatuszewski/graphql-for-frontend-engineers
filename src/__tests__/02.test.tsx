@@ -6,6 +6,7 @@ import {
   waitForElementToBeRemoved,
   screen
 } from "@testing-library/react";
+import { Exercise2 } from "../exercise/02";
 
 describe("02", () => {
   it("correctly fetches the messages", async () => {
